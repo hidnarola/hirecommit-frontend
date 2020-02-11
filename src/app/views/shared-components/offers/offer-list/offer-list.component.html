@@ -1,0 +1,234 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <!-- //employer -->
+        <div class="col-lg-12">
+            <div class="card" *ngIf="!hide_list">
+
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Offers
+                    <p class="pull-right"></p>
+                    <button *ngIf="userDetail.role === 'employer' || (userDetail.role === 'sub-employer')"
+                        class="pull-right btn btn-sm btn-primary custom-margin" (click)="add(content)">
+                        <i class="icon-plus"></i>
+                        Add Offers
+                    </button>
+                </div>
+
+                <!-- popup -->
+                <ng-template #content let-c="close" let-d="dismiss">
+                    <div class="modal-header instructions-popup-head">
+                        <h4 class="modal-title" id="modal-basic-title"><i class="icon-info"></i>
+                            Information</h4>
+                        <button type="button" id="closeBtn" class="close" aria-label="Close"
+                            (click)="d('Cross click')"><i class="fa fa-times"> </i></button>
+                    </div>
+                    <div class="modal-body instructions-popup-body">
+                        <!-- <h5></h5> -->
+                        <h6>{{message}}
+                        </h6>
+
+                    </div>
+                </ng-template>
+                <!-- popup -->
+
+                <!-- popup -->
+                <ng-template #content1 let-c="close" let-d="dismiss">
+                    <div class="modal-header instructions-popup-head information-popup-head-01">
+                        <h4 class="modal-title" id="modal-basic-title"><i class="icon-info"></i>
+                            Information</h4>
+                        <button type="button" id="closeBtn" class="close" aria-label="Close"
+                            (click)="d('Cross click'); disabledAccept()"><i class="fa fa-times"> </i></button>
+                    </div>
+                    <div class="modal-body instructions-popup-body information-popup-body-01">
+                        <!-- <h5></h5> -->
+
+                        <h5 class="text-decoration">{{Info_msg}}
+                        </h5>
+                        <!-- <a *ngIf="!isNoCommit" href="termsandcondition" target="_blank">Terms and Conditions</a><br> -->
+                        <!-- <input type="radio" id="accept" value="accept" name="accept" formControlName="accept"
+                            (click)="accept($event)"> -->
+                        <p-radioButton name="accept" value="accept" [(ngModel)]="selectedValue"
+                            (onClick)="acceptOffer($event)" *ngIf="!isNoCommit"></p-radioButton>
+                        <label for="accept" *ngIf="!isNoCommit">Accept</label>
+                        <!-- <p-radioButton name="notAccept" value="notAccept" [(ngModel)]="selectedValue"
+                            (onClick)="acceptOffer($event)">
+                        </p-radioButton>
+                        <label for="accept">None</label> -->
+
+                    </div>
+                    <div class="modal-footer instructions-popup-footer">
+                        <button type="button" id="acceptbtn" class="btn btn-primary" disabled
+                            *ngIf="!isAccept && !isNoCommit ">Accept</button>
+                        <button type="button" id="acceptbtn" class="btn btn-primary" *ngIf="isAccept || isNoCommit"
+                            (click)="acceptedOffer()">Accept</button>
+                        <button type="button" class="back-btn-info btn btn-info"
+                            (click)="d('Cross click'); disabledAccept()">Back</button>
+                    </div>
+                </ng-template>
+                <!-- popup -->
+
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table"
+                        style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th> Offer Date</th>
+                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    Candidate Email</th>
+                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    Candidate Name</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Employer Name</th>
+                                <th>Title</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Salary Type</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Salary Duration</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Salary</th>
+                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    Location</th>
+                                <th>Expiry Date</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Acceptance Date</th>
+                                <th>Joining Date</th>
+                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    Acceptance Date</th>
+                                <!-- <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Offer
+                                    Type</th>
+                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Group
+                                </th> -->
+                                <!-- <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Commit
+                                    Status</th> -->
+                                <th>Offer
+                                    Status</th>
+                                <!-- <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Commit
+                                    Status</th> -->
+                                <!-- <th [ngClass]="first_custom_field === ''? 'd-0' : ''"
+                                    *ngIf="(userDetail.role === 'employer' || userDetail.role === 'sub-employer')">
+                                    {{first_custom_field |titlecase}}</th> -->
+                                <th style="width: 15%;">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <!-- [ngClass]="{'expired': data.isExpired}" -->
+
+                            <tr *ngFor="let offer of offerData; let i = index;" id="offer-tr"
+                                [ngClass]="{'expired': offer.isExpired}">
+
+                                <td>{{offer.createdAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.candidate.user.email}}</td>
+                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.candidate.firstname}} {{offer.candidate.lastname}}</td>
+                                <td *ngIf="userDetail.role === 'candidate'">
+                                    {{offer.employer_id.employer.companyname}}
+                                    <!-- {{offer.created_by.username ? offer.created_by.username : offer.employer_id.employer.username}} -->
+                                </td>
+
+                                <td>{{offer.title}}</td>
+                                <td *ngIf="userDetail.role === 'candidate'">{{offer.salarytype|titlecase}}</td>
+                                <td *ngIf="userDetail.role === 'candidate'">
+                                    {{offer.salaryduration != "null" ? offer.salaryduration : '-'}}
+                                </td>
+                                <td *ngIf="offer.salary && userDetail.role === 'candidate'">{{offer.salary}}
+                                </td>
+                                <td *ngIf="offer.salary_from && offer.salary_to && userDetail.role === 'candidate'">
+                                    {{offer.salary_from}} to {{offer.salary_to}}
+                                </td>
+                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.location.city}}</td>
+                                <!-- <td *ngIf="offer.salary">{{offer.salary}}</td>
+                                <td *ngIf="offer.salary_from && offer.salary_to">
+                                    {{offer.salary_from}} to {{offer.salary_to}}
+                                </td> -->
+                                <td>{{offer.expirydate | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <td *ngIf="userDetail.role === 'candidate'">
+                                    {{offer.acceptedAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <td>{{offer.joiningdate | date: 'dd/MM/yyyy' : 'utc'}}</td>
+                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.acceptedAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <!-- <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.offertype}}</td>
+                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{ offer.group!=undefined && offer.group!='null'  ? offer.group.name : '-' }}</td> -->
+                                <!-- <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    -
+                                </td> -->
+                                <td>
+                                    {{offer.status|titlecase}}</td>
+                                <!-- <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                    {{offer.commitstatus|titlecase}}</td> -->
+                                <!-- <td [ngClass]="first_custom_field === ''? 'd-0' : ''"
+                                    *ngIf="(userDetail.role === 'employer' || userDetail.role === 'sub-employer')"> -->
+
+                                <!-- {{ offer.customfeild[0].key === first_custom_field || offer.customfeild[0].value  ? offer.customfeild[0].value : '-'}} -->
+
+                                <!-- {{ offer.customfeild && offer.customfeild.length > 0 ? offer.customfeild[0].value : '-'}} -->
+                                <!-- </td> -->
+                                <td>
+
+                                    <!-- <button *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'"
+                                        type="button" class="btn btn-sm btn-primary" (click)="history(offer._id)"><i
+                                        class="icon-pencil"></i></button> -->
+
+                                    <button tooltip='View' type="button" class="btn btn-sm btn-success"
+                                        (click)='detail(offer._id)'><i class="icon-eye"></i></button>
+
+                                    <button tooltip='Edit'
+                                        *ngIf="userDetail.role === 'employer' || (userDetail.role === 'sub-employer')"
+                                        type="button" class="btn btn-sm btn-primary" (click)="edit(offer._id)"><i
+                                            class="icon-pencil"></i></button>
+
+                                    <button tooltip='History'
+                                        *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'"
+                                        type="button" class="btn btn-sm btn-secondary" (click)="history(offer._id)"><i
+                                            class="fa fa-history"></i></button>
+
+                                    <button *ngIf="userDetail.role === 'candidate'" type="button" tooltip='Accept'
+                                        class="btn btn-sm btn-primary" (click)="onAccept(offer._id,offer.offertype)"
+                                        id="accept{{i}}" [disabled]="offer.status === 'Accepted' || accept_btn"
+                                        [ngClass]="offer.isExpired ? 'd-0' : ''">
+                                        <!-- [ngClass]="offer.hideAccept ? 'd-0' : ''" -->
+                                        <i class="icon-check"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody *ngIf="offerData?.length == 0">
+                            <tr>
+                                <td *ngIf="userDetail.role === 'employer'" colspan="12" class="no-data-available">No
+                                    Offers Available!</td>
+                                <td *ngIf="userDetail.role === 'candidate'" colspan="12" class="no-data-available">There
+                                    are no offers you have received via HireCommit. Tell companies & recruiters you are
+                                    HireCommit'd and give yourself
+                                    an edge.<br>
+                                    Have more favorable discussions and receive offers from companies via
+                                    HireCommit.
+                                    You can receive multiple offers on HireCommit; there is absolutely no restriction.
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="card" *ngIf="hide_list && userDetail.role === 'candidate'">
+                <div class="card-body not_verified_block">
+                    <div class="alert alert-danger">
+                        <i class="fa fa-times-circle-o" aria-hidden="true"></i> {{Canididate_message}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="card" *ngIf="hide_list && userDetail.role === 'employer'">
+                <div class="card-body not_verified_block">
+                    <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                    <h1>{{message}}</h1>
+                </div>
+            </div> -->
+
+        </div>
+        <!-- employer -->
+
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

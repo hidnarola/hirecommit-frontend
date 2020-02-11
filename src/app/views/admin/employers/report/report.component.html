@@ -1,0 +1,177 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Offers
+                    <p class="pull-right"></p>
+                    <!-- <button *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'"
+                        class="pull-right btn btn-sm btn-primary custom-margin" (click)="add()">
+                        <i class="icon-plus"></i>
+                        Add
+                    </button> -->
+
+                </div>
+                <div class="inline_input">
+                    <h6 class="mr-2">Start Date </h6>
+                    <p-calendar id="from" (onSelect)="onFrom($event)" showButtonBar="true" dateFormat="mm/dd/yy"
+                        [readonlyInput]="true" placeholder="MM/DD/YYYY" (onClearClick)="onClearFrom()">
+                    </p-calendar>
+                    <h6 class="mr-2">End date </h6>
+                    <p-calendar id="to" (onSelect)="onTo($event)" showButtonBar="true" dateFormat="mm/dd/yy"
+                        [readonlyInput]="true" placeholder="MM/DD/YYYY" (onClearClick)="onClearTo()"
+                        [minDate]="StartToDate" [disabled]="!from">
+                    </p-calendar>
+
+                    <button class="btn btn-sm btn-primary" type="button" (click)="filterWithDateRange()"
+                        [disabled]="!to" id="check"><i class="fa fa-search"></i></button>
+                </div>
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table">
+
+                        <thead>
+                            <tr>
+                                <th> Offer Date</th>
+                                <th>
+                                    Candidate Email</th>
+                                <th>
+                                    Candidate Name</th>
+
+                                <th>Title</th>
+                                <!-- <th *ngIf="userDetail.role === 'candidate'">Salary Type</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Salary Duration</th>
+                                <th *ngIf="userDetail.role === 'candidate'">Salary</th> -->
+                                <th>
+                                    Location</th>
+                                <th>Expiry Date</th>
+                                <!-- <th *ngIf="userDetail.role === 'candidate'">Acceptance Date</th> -->
+                                <th>Joining Date</th>
+                                <th>
+                                    Acceptance Date</th>
+                                <!-- <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Offer
+                                                                    Type</th>
+                                                                <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Group
+                                                                </th> -->
+                                <!-- <th>Commit
+                                    Status</th> -->
+                                <th>Offer
+                                    Status</th>
+                                <!-- <th *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">Commit
+                                                                    Status</th> -->
+                                <!-- <th [ngClass]="first_custom_field === ''? 'd-0' : ''"
+                                                                    *ngIf="(userDetail.role === 'employer' || userDetail.role === 'sub-employer')">
+                                                                    {{first_custom_field |titlecase}}</th> -->
+                                <th style="width: 15%;">Action</th>
+                                <!-- <th>Date</th>
+                                <th>Title</th>
+                                <th>Salary Type</th>
+                                <th>Salary Bracket</th>
+                                <th>Expiry Date</th>
+                                <th>Joining Date</th>
+                                <th>Offer
+                                    Type</th>
+                                <th>Group
+                                </th>
+                                <th>Current
+                                    Status</th>
+                                <th>Commit
+                                    Status</th>
+                                <th>
+                                    {{first_custom_field |titlecase}}</th>
+                                <th style="width: 15%;">Action</th> -->
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let offer of offerData; let i = index;" id="offer-tr"
+                                [ngClass]="{'expired': offer.isExpired}">
+                                <!-- <td>{{offer.createdAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <td>{{offer.title}}</td>
+                                <td>{{offer.salarytype|titlecase}}</td>
+                                <td *ngIf="offer.salary">{{offer.salary}}</td>
+                                <td *ngIf="offer.salary_from && offer.salary_to">
+                                    {{offer.salary_from}} to {{offer.salary_to}}
+                                </td>
+                                <td>{{offer.expirydate | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <td>{{offer.joiningdate | date: 'dd/MM/yyyy' : 'utc'}}</td>
+                                <td>
+                                    {{offer.offertype}}</td>
+                                <td>
+                                    {{ offer.group!=undefined && offer.group!='null'  ? offer.group.name : '-' }} 
+                                </td>
+                                <td>
+                                    {{offer.status|titlecase}}</td>
+                                <td>
+                                    {{offer.commitstatus|titlecase}}</td>
+                                <td>
+                                    {{ offer.customfeild[0].key === first_custom_field && offer.customfeild[0].value  ? offer.customfeild[0].value : '-'}}
+                                </td> -->
+
+                                <td>{{offer.createdAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+
+
+                                <td>
+                                    {{offer.candidate.user.email}}</td>
+                                <td>
+                                    {{offer.candidate.firstname}} {{offer.candidate.lastname}}</td>
+
+                                <td>{{offer.title}}</td>
+                                <td>
+                                    {{offer.location.city}}</td>
+                                <!-- <td *ngIf="offer.salary">{{offer.salary}}</td>
+                                                                <td *ngIf="offer.salary_from && offer.salary_to">
+                                                                    {{offer.salary_from}} to {{offer.salary_to}}
+                                                                </td> -->
+                                <td>{{offer.expirydate | date: 'dd/MM/yyyy': 'utc'}}</td>
+
+                                <td>{{offer.joiningdate | date: 'dd/MM/yyyy' : 'utc'}}</td>
+                                <td>
+                                    {{offer.acceptedAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <!-- <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                                                    {{offer.offertype}}</td>
+                                                                <td *ngIf="userDetail.role === 'employer' || userDetail.role === 'sub-employer'">
+                                                                    {{ offer.group!=undefined && offer.group!='null'  ? offer.group.name : '-' }}</td> -->
+                                <!-- <td>
+                                    -
+                                </td> -->
+                                <td>
+                                    {{offer.status|titlecase}}</td>
+                                <td>
+
+                                    <!-- <button 
+                                        type="button" class="btn btn-sm btn-primary" (click)="history(offer._id)"><i
+                                        class="icon-pencil"></i></button> -->
+
+                                    <button tooltip='View' type="button" class="btn btn-sm btn-success"
+                                        [routerLink]="['/admin/employers/approved_employer/report/'+id+'/view/'+offer._id]"><i
+                                            class="icon-eye"></i></button>
+
+                                    <!-- <button tooltip='Edit'
+                                        
+                                        type="button" class="btn btn-sm btn-primary" (click)="edit(offer._id)"><i
+                                            class="icon-pencil"></i></button> -->
+
+                                    <button tooltip='History' type="button" class="btn btn-sm btn-secondary"
+                                        [routerLink]="['/admin/employers/approved_employer/report/'+id+'/history/'+offer._id]"><i
+                                            class="fa fa-history"></i></button>
+
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody *ngIf="offerData?.length == 0">
+                            <tr>
+                                <td colspan="12" class="no-data-available">No Offers Available!</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

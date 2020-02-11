@@ -1,0 +1,1592 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <!-- add-edit -->
+            <div class="card" *ngIf="!is_View">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">{{panelTitle}} Offer</strong>
+                    <!-- <span class="input-group-text pull-right" [routerLink]="cancel_link">
+                        <i class="icon-close"></i>
+                    </span> -->
+                </div>
+
+                <form class="form-horizontal" [formGroup]="form">
+                    <div class="card-body">
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-12">
+                                <h3>Candidate Detail</h3>
+                            </div>
+                            <!-- popup -->
+                            <ng-template #content let-c="close" let-d="dismiss">
+                                <div class="modal-header instructions-popup-head">
+                                    <h4 class="modal-title" id="modal-basic-title">Instructions</h4>
+                                    <button type="button" id="closeBtn" *ngIf="!isShow" class="close" aria-label="Close"
+                                        (click)="d('Cross click')"><i class="fa fa-times">
+                                        </i></button>
+                                </div>
+                                <div class="modal-body offer-popup-body">
+                                    <h5>{{msg}}</h5>
+                                    <div class="row offer-popup-content">
+                                        <div class="col-md-4">
+                                            <h6>Date</h6>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h6>Offers</h6>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="isShow">
+                                        <div *ngFor="let data of details" class="row">
+                                            <div class="col-md-4">
+                                                <!-- <h6> -->
+                                                {{data.joiningdate | date: 'dd/MM/yyyy' : 'utc'}}
+                                                <!-- </h6> -->
+                                            </div>
+                                            <div class="col-md-8">
+                                                <!-- <h6> -->
+                                                {{data.title}}
+                                                <!-- </h6>
+                                             -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer instructions-popup-footer" *ngIf="isShow">
+                                    <button type="button" class="btn btn-primary" (click)="next('Cross click')">Got
+                                        It!</button>
+                                </div>
+                            </ng-template>
+                            <!-- popup -->
+
+                            <!-- popup 2 -->
+                            <ng-template #content1 let-c="close" let-d="dismiss">
+                                <div class="modal-header instructions-popup-head">
+                                    <h4 class="modal-title" id="modal-basic-title">Warning</h4>
+                                    <!-- <button type="button" *ngIf="isShow" id="closeBtn" class="close" aria-label="Close"
+                                        (click)="d('Cross click')"><i class="fa fa-times">
+                                        </i></button> -->
+                                </div>
+                                <div class="modal-body offer-popup-body">
+                                    <h5>{{err_msg}}</h5>
+
+
+                                </div>
+                                <div class="modal-footer instructions-popup-footer">
+                                    <button type="button" class="btn btn-primary" (click)="send()">Got
+                                        It!</button>
+                                </div>
+                            </ng-template>
+                            <!-- popup 2 -->
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="email">Email<p class="ast"> *</p></label>
+                                <input type="email" *ngIf="!is_Edit" class="form-control" placeholder="Enter Email"
+                                    autocomplete="email" formControlName="email" id="email" (keyup)="findEmail($event)"
+                                    (blur)="checkEmail($event)">
+                                <input *ngIf="is_Edit" type="email" class="form-control" placeholder="Enter Email"
+                                    autocomplete="email" formControlName="email" id="email" disabled>
+
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['email'].valid">
+                                    <span *ngIf="form.controls['email'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!form.controls['email'].valid">
+                                    <span *ngIf="form.controls['email'].errors['pattern']" class="text-danger">Email
+                                        must be in valid format.</span>
+
+                                    <span *ngIf="form.controls['email'].errors['isExist']" class="text-danger">
+                                        <!-- This Email address is already registered. -->
+                                        You can not sent offer to this user.
+                                    </span>
+                                    <!-- <span *ngIf="form.controls['email'].errors['required'] " class="text-danger">
+                                        This field is required.
+                                    </span> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="candidate">Candidate Name <p class="ast"> *</p>
+                                </label>
+
+                                <input type="text" *ngIf="!is_Edit" class="form-control" placeholder="Enter Name"
+                                    autocomplete="candidate_name" formControlName="candidate_name" id="candidate_name"
+                                    (keyup)="isTouched($event)">
+                                <input type="text" *ngIf="is_Edit" class="form-control" placeholder="Enter Name"
+                                    autocomplete="candidate_name" formControlName="candidate_name" id="candidate_name"
+                                    disabled>
+                                <div class="cust_err_msg"
+                                    *ngIf="form_validation && !form.controls['candidate_name'].valid">
+                                    <span *ngIf="form.controls['candidate_name'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div *ngIf="display_msg" style="color: grey;"><span>Candidate Name as per our
+                                        records,
+                                        matching email</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="title">Title <p class="ast"> *</p></label>
+                                <input type="title" class="form-control" placeholder="Enter Title" autocomplete="title"
+                                    formControlName="title" id="title" (keyup)="isTouched($event)">
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['title'].valid">
+                                    <span
+                                        *ngIf="form.controls['title'].errors['required'] || form.get('title').errors['whitespace']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="location">Location <p class="ast"> *</p></label>
+                                <p-dropdown [options]="locationList" [style]="{'width':'100%'}"
+                                    formControlName="location" id="location" placeholder="Select Location"
+                                    [disabled]="isAccepted" (onChange)="isTouched($event)"></p-dropdown>
+
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['location'].valid">
+                                    <span *ngIf="form.controls['location'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-12">
+                                <h3>Salary Detail</h3>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="salarytype">Salary Type <p class="ast"> *</p></label>
+                                <div class="custom-radio-wrap d-flex flex-warp">
+                                    <div class="custom-control custom-radio mr-5">
+                                        <input type="radio" id="annual" class="custom-control-input" value="annual"
+                                            name="salarytype" formControlName="salarytype" (change)="getSalaryType()">
+                                        <label class="custom-control-label" for="annual">Annual</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="hourly" class="custom-control-input" value="hourly"
+                                            name="salarytype" formControlName="salarytype" (change)="getSalaryType()">
+                                        <label class="custom-control-label" for="hourly">Hourly</label>
+                                    </div>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['salarytype'].valid">
+                                    <span *ngIf="form.controls['salarytype'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="salarybracket">Salary <p class="ast"
+                                        *ngIf="astSalary"> *</p></label>
+
+                                <input type="number" min="1" class="form-control" placeholder="Enter Salary Bracket"
+                                    formControlName="salarybracket" id="salarybracket" (blur)="onSalaryBlur()"
+                                    (keyup)="CheckAst($event)">
+
+                                <div class="cust_err_msg"
+                                    *ngIf="((form_validation || isSalaryBracket) && !form.controls['salarybracket'].valid)">
+                                    <span *ngIf="form.controls['salarybracket'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                    <span *ngIf="form.controls['salarybracket'].errors['pattern']"
+                                        class="text-danger">Enter valid value.</span>
+                                </div>
+
+                                <!-- <div class="cust_err_msg"
+                                    *ngIf="isSalaryBracket && !form.controls['salarybracket'].valid">
+
+                                    <span *ngIf="form.controls['salarybracket'].errors['pattern']"
+                                        class="text-danger">Enter valid value.</span>
+                                </div> -->
+
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="salarybracket_from">Salary From <p class="ast"
+                                        *ngIf="ast"> *</p></label>
+                                <input type="number" min="1" class="form-control" placeholder="Enter Salary Range From"
+                                    formControlName="salarybracket_from" id="salarybracket_from"
+                                    (keyup)="checkFrom($event,salaryto.value)" #salaryfrom (blur)="onSalaryRangeBlur()">
+
+                                <div class="cust_err_msg"
+                                    *ngIf="(form_validation || isSalaryFrom_To)  && !form.controls['salarybracket_from'].valid">
+                                    <span *ngIf="form.controls['salarybracket_from'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                    <span
+                                        *ngIf="form.controls['salarybracket_from'].errors['pattern'] || !form.controls['salarybracket_from'].errors['required']"
+                                        class="text-danger">Enter valid value.</span>
+
+                                </div>
+                                <!-- <div class="cust_err_msg" *ngIf="!form.controls['salarybracket_from'].valid">
+                                    <span *ngIf="form.controls['salarybracket_from'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                    <span
+                                        *ngIf="form.controls['salarybracket_from'].errors['pattern'] || !form.controls['salarybracket_from'].errors['required']"
+                                        class="text-danger">Enter valid value.</span>
+
+                                </div> -->
+                                <span *ngIf="error" class="text-danger">{{err_from}}</span>
+                                <!-- {{error_msg1}} -->
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="salarybracket_to">Salary To <p class="ast"
+                                        *ngIf="ast"> *</p></label>
+                                <input type="number" min="1" class="form-control" placeholder="Enter Salary Range To"
+                                    formControlName="salarybracket_to" id="salarybracket_to"
+                                    (blur)="onSalaryRangeBlur()" #salaryto (keyup)="checkTo($event,salaryfrom.value)">
+
+                                <div class="cust_err_msg"
+                                    *ngIf="(form_validation || isSalaryFrom_To) && !form.controls['salarybracket_to'].valid">
+                                    <span *ngIf="form.controls['salarybracket_to'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                    <span
+                                        *ngIf="form.controls['salarybracket_to'].errors['pattern'] || !form.controls['salarybracket_to'].errors['required']"
+                                        class="text-danger">Enter valid value.</span>
+
+                                </div>
+
+                                <!-- <div class="cust_err_msg" *ngIf="!form.controls['salarybracket_to'].valid">
+                                    <span *ngIf="form.controls['salarybracket_to'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                    <span
+                                        *ngIf="form.controls['salarybracket_to'].errors['pattern'] || !form.controls['salarybracket_to'].errors['required']"
+                                        class="text-danger">Enter valid value.</span>
+
+                                </div> -->
+                                <span *ngIf="error" class="text-danger">{{err_to}}</span>
+                                <!-- {{error_msg}} -->
+                            </div>
+
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="salaryduration">Hourly Salary
+                                    Duration <p class="ast" *ngIf="!disabled"> *</p></label>
+                                <div class="append-week">
+
+                                    <input type="number" class="form-control" placeholder="Enter Hourly Salary Duration"
+                                        formControlName="salaryduration" id="salaryduration" *ngIf="disabled" disabled>
+
+                                    <input type="number" class="form-control" placeholder="Enter Hourly Salary Duration"
+                                        formControlName="salaryduration" id="salaryduration" *ngIf="!disabled" min="1"
+                                        (blur)="checkPositive()" (keyup)="isTouched($event)">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Week(s)</span>
+                                    </div>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="form_validation && !form.controls['salaryduration'].valid">
+                                    <span *ngIf="form.controls['salaryduration'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!form.controls['salaryduration'].valid">
+                                    <span *ngIf="form.controls['salaryduration'].errors['pattern']" class="text-danger">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                            <!--  input salary bracket -->
+                        </div>
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-12">
+                                <h3>Offer Dates & Type</h3>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="expirydate">Expiry Date <p class="ast"> *</p></label>
+
+                                <p-calendar dateFormat="dd/mm/yy" [style]="{'width':'100%'}" *ngIf="offerExpired"
+                                    [inputStyle]="{'width':'100%'}" placeholder="DD/MM/YYYY"
+                                    formControlName="expirydate" id="expirydate" [readonlyInput]="is_View"
+                                    [minDate]="min_date" (onSelect)="getExpiryDate($event)">
+                                </p-calendar>
+                                <p-calendar dateFormat="dd/mm/yy" [style]="{'width':'100%'}" *ngIf="!offerExpired"
+                                    [inputStyle]="{'width':'100%'}" placeholder="DD/MM/YYYY"
+                                    formControlName="expirydate" id="expirydate" [readonlyInput]="is_View"
+                                    [disabled]="is_View || isAccepted" [minDate]="min_date"
+                                    (onSelect)="getExpiryDate($event)">
+                                </p-calendar>
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['expirydate'].valid">
+                                    <span *ngIf="form.controls['expirydate'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="joiningdate">Joining Date <p class="ast"> *</p>
+                                </label>
+                                <p-calendar dateFormat="dd/mm/yy" [style]="{'width':'100%'}"
+                                    [inputStyle]="{'width':'100%'}" *ngIf="offerExpired" placeholder="DD/MM/YYYY"
+                                    formControlName="joiningdate" id="joiningdate" [disabled]="is_View"
+                                    [minDate]="max_date">
+                                </p-calendar>
+                                <p-calendar dateFormat="dd/mm/yy" *ngIf="!offerExpired" [style]="{'width':'100%'}"
+                                    [inputStyle]="{'width':'100%'}" placeholder="DD/MM/YYYY"
+                                    formControlName="joiningdate" id="joiningdate" [minDate]="max_date"
+                                    (onSelect)="isTouched($event)">
+                                </p-calendar>
+                                <!-- <p-calendar dateFormat="dd/mm/yy" [style]="{'width':'100%'}" *ngIf="is_Edit" [inputStyle]="{'width':'100%'}" placeholder="DD/MM/YYYY"
+                                    formControlName="joiningdate" id="joiningdate" [minDate]="max_date"
+                                   > -->
+                                <!-- </p-calendar> -->
+                                <div class="cust_err_msg"
+                                    *ngIf="form_validation && !form.controls['joiningdate'].valid">
+                                    <span *ngIf="form.controls['joiningdate'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!form.controls['joiningdate'].valid">
+                                    <span *ngIf="form.controls['joiningdate'].errors['isGreater']" class="text-danger">
+                                        <!-- Please select Joining date greater than Expiry date. -->
+                                        Joining date should be greater than Expiry date
+                                    </span>
+                                </div>
+                            </div>
+
+
+                            <div *ngIf="is_Edit" class="col-md-6 form-group">
+                                <label class="col-form-label" for="expirydate">Acceptance Date</label>
+                                <input type="text" class="form-control" placeholder="Date of Offer Acceptance"
+                                    formControlName="acceptanceDate" id="acceptanceDate" disabled>
+
+                            </div>
+                            <!-- </div>
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-12">
+                                <h3>General Details</h3>
+                            </div> -->
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="offertype">HireLock Offer Type <p class="ast"> *</p>
+                                </label>
+                                <p-dropdown [options]="offer_type_optoins" [style]="{'width':'100%'}"
+                                    formControlName="offertype" id="offertype" [disabled]="isAccepted"
+                                    (onChange)="isTouched($event.value)">
+                                </p-dropdown>
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['offertype'].valid">
+                                    <span *ngIf="form.controls['offertype'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="notes">Notes</label>
+                                <textarea type="notes" class="form-control" placeholder="Enter notes"
+                                    autocomplete="notes" formControlName="notes" id="notes" maxlength="500" rows="4"
+                                    style=" overflow-y: scroll;" [disabled]="isAccepted"
+                                    (keyup)="isTouched($event)"></textarea>
+                                <div class="cust_err_msg" *ngIf="form_validation && !form.controls['notes'].valid">
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-6 form-group" *ngIf="is_Edit">
+                                <label class="col-form-label">Commit Status</label>
+                                <input type="text" class="form-control" autocomplete="status" formControlName="status"
+                                    disabled id="status">
+                            </div> -->
+                            <div class="col-md-6 form-group" *ngIf="is_Edit">
+                                <label class="col-form-label" for="offerStatus">Offer Status(To change, select
+                                    value)</label>
+                                <!-- <p-inputSwitch [(ngModel)]="offerStatus" formControlName="is_active" name="is_active">
+                                                        </p-inputSwitch> -->
+                                <p-dropdown [options]="offerStatus" [style]="{'width':'100%'}" optionLabel="label"
+                                    optionValue="value" formControlName="offerStatus" id="offerStatus"
+                                    placeholder="Please Select Status" (onChange)="isTouched($event)"
+                                    [disabled]="isJoiningDate">
+                                </p-dropdown>
+                            </div>
+                        </div>
+
+                        <!-- Custom Field -->
+                        <ng-container formArrayName="customfieldItem" *ngIf="isCustomFieldAdd">
+                            <div class="row add-offer-form-part">
+                                <div class="col-md-12">
+                                    <h3>Custom Field Details</h3>
+                                </div>
+                                <!-- <div class="row"> -->
+                                <div class="col-md-6 form-group" formGroupName="{{i}}"
+                                    *ngFor="let customfield of offer_data.customfieldItem; let i=index">
+                                    <label class="col-form-label" for="customfield.key">
+                                        {{customfield.key}}
+                                    </label>
+                                    <input type="text" formControlName="value" class="form-control"
+                                        placeholder="Enter value" id="value{{i}}" *ngIf="!isAccepted"
+                                        (keyup)="isTouched($event)">
+                                    <input type="text" formControlName="value" class="form-control"
+                                        placeholder="Enter value" id="value{{i}}" *ngIf="isAccepted" disabled>
+                                    <div class="cust_err_msg"
+                                        *ngIf="form_validation && !form.controls['customfieldItem'].controls[i].controls['value'].valid">
+                                        <span
+                                            *ngIf="form.controls['customfieldItem'].controls[i].controls['value'].errors['_whitespace']"
+                                            class="text-danger">
+                                            Enter valid data.
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- </div> -->
+                            </div>
+                        </ng-container>
+                        <!-- Custom Field -->
+                        <div class="row add-offer-form-part">
+                            <div class="col-md-12">
+                                <h3>Communication Details</h3>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label class="col-form-label" for="group">Group</label>
+                                <p-dropdown [options]="group_optoins" [style]="{'width':'100%'}" formControlName="group"
+                                    placeholder="Select Group" id="group" [disabled]="isAccepted"
+                                    (onChange)="groupChange($event)">
+                                </p-dropdown>
+                                <!-- <div class="cust_err_msg" *ngIf="form_validation && !form.controls['group'].valid">
+                                    <span *ngIf="form.controls['group'].errors['required']" class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div> -->
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label> &nbsp; </label>
+                                <button class="btn btn-sm btn-primary" style="float: right;"
+                                    (click)="addMoreCommunication()" [disabled]="offerExpired" type="button">
+                                    Add AdHoc Communication
+                                </button>
+                            </div>
+
+
+                            <!-- group details -->
+                            <div>
+                                <div class="col-md-12 form-group">
+                                    <label class="d-block text-left col-form-label">
+                                        <h5>Set no. of days after which alert email will be sent.</h5>
+                                    </label>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="ml-4 col-md-6" for="high_unopened">High - UnOpened</label>
+                                    <div class="input-group col-md-4">
+                                        <input type="number" min="0" class="form-control" autocomplete="high_unopened"
+                                            formControlName="high_unopened" [(ngModel)]="groupData.high_unopened"
+                                            id="high_unopened" disabled *ngIf="isAccepted">
+
+                                        <input type="number" min="0" class="form-control" autocomplete="high_unopened"
+                                            formControlName="high_unopened" [(ngModel)]="groupData.high_unopened"
+                                            id="high_unopened" *ngIf="!isAccepted " (blur)="removeZero_high_unopened()"
+                                            (keyup)="isTouched($event)">
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                        <div class="cust_err_msg"
+                                            *ngIf="form_validation && !form.controls['high_unopened'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['high_unopened'].errors['required']">
+                                                This field is required.
+                                            </span>
+                                        </div>
+
+                                        <div class="cust_err_msg" *ngIf="!form.controls['high_unopened'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['high_unopened'].errors['pattern']">
+                                                Enter valid data.
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="ml-4 col-md-6" for="high_notreplied">High - NotReplied</label>
+                                    <div class="input-group col-md-4">
+
+                                        <input type="number" min="0" class="form-control" autocomplete="high_notreplied"
+                                            formControlName="high_notreplied" [(ngModel)]="groupData.high_notreplied"
+                                            id="high_notreplied" disabled *ngIf="isAccepted">
+
+                                        <input type="number" min="0" class="form-control" autocomplete="high_notreplied"
+                                            formControlName="high_notreplied" [(ngModel)]="groupData.high_notreplied"
+                                            id="high_notreplied" *ngIf="!isAccepted "
+                                            (blur)="removeZero_high_notreplied()" (keyup)="isTouched($event)">
+
+
+
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                        <div class="cust_err_msg"
+                                            *ngIf="form_validation && !form.controls['high_notreplied'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['high_notreplied'].errors['required']">
+                                                This field is required.
+                                            </span>
+                                        </div>
+                                        <div class="cust_err_msg" *ngIf="!form.controls['high_notreplied'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['high_notreplied'].errors['pattern']">
+                                                Enter valid data.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="ml-4 col-md-6" for="medium_unopened">Medium - UnOpened</label>
+                                    <div class="input-group col-md-4">
+
+                                        <input type="number" min="0" class="form-control" autocomplete="medium_unopened"
+                                            formControlName="medium_unopened" [(ngModel)]="groupData.medium_unopened"
+                                            id="medium_unopened" disabled *ngIf="isAccepted">
+
+                                        <input type="number" min="0" class="form-control" autocomplete="medium_unopened"
+                                            formControlName="medium_unopened" [(ngModel)]="groupData.medium_unopened"
+                                            id="medium_unopened" *ngIf="!isAccepted "
+                                            (blur)="removeZero_medium_unopened()" (keyup)="isTouched($event)">
+
+
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                        <div class="cust_err_msg"
+                                            *ngIf="form_validation && !form.controls['medium_unopened'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['medium_unopened'].errors['required']">
+                                                This field is required.
+                                            </span>
+                                        </div>
+                                        <div class="cust_err_msg" *ngIf="!form.controls['medium_unopened'].valid">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['medium_unopened'].errors['pattern']">
+                                                Enter valid data.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="ml-4 col-md-6" for="medium_notreplied">Medium - NotReplied</label>
+                                    <div class="input-group col-md-4">
+                                        <input type="number" min="0" class="form-control"
+                                            autocomplete="medium_notreplied" formControlName="medium_notreplied"
+                                            [(ngModel)]="groupData.medium_notreplied" id="medium_notreplied" disabled
+                                            *ngIf="isAccepted">
+                                        <input type="number" min="0" class="form-control"
+                                            autocomplete="medium_notreplied" formControlName="medium_notreplied"
+                                            [(ngModel)]="groupData.medium_notreplied" id="medium_notreplied"
+                                            *ngIf="!isAccepted " (blur)="removeZero_medium_notreplied()"
+                                            (keyup)="isTouched($event)">
+
+
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">Days</span>
+                                        </div>
+                                        <div class="cust_err_msg"
+                                            *ngIf="form_validation && !form.controls['medium_notreplied'].valid ">
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['medium_notreplied'].errors['required']">
+                                                This field is required.
+                                            </span>
+                                        </div>
+                                        <div class="cust_err_msg" *ngIf="!form.controls['medium_notreplied'].valid">
+                                            <!-- <span class="text-danger"
+                                                *ngIf="form.controls['medium_notreplied'].errors['required']">
+                                                This field is required.
+                                            </span> -->
+                                            <span class="text-danger"
+                                                *ngIf="form.controls['medium_notreplied'].errors['pattern']">
+                                                Enter valid data.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- group details -->
+                        </div>
+                        <!-- communication -->
+                        <ng-container formArrayName="communicationFieldItems" *ngIf="isSetCommunication">
+                            <div class="form-group row" formGroupName="{{i}}"
+                                *ngFor="let customfield of communicationData; let i=index">
+                                <div class="col-md-12 mt-3">
+                                    <div class="card communication-fills">
+                                        <div class="card-header h5">Communication - {{i+1}}
+                                            <!-- <button type="button" class="btn btn-danger pull-right"
+                                                (click)="remove_communication(i)"
+                                                [disabled]="offerExpired">Delete</button> -->
+
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="name">
+                                                        Communication Name
+                                                    </label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" *ngIf="offerExpired" class="form-control"
+                                                            placeholder="Enter Name" formControlName="communicationname"
+                                                            id="communicationname"
+                                                            [(ngModel)]="customfield.communicationname" disabled>
+
+                                                        <input type="text" *ngIf="!offerExpired" class="form-control"
+                                                            placeholder="Enter name" formControlName="communicationname"
+                                                            id="communicationname"
+                                                            [(ngModel)]="customfield.communicationname"
+                                                            (keyup)="isTouched($event)">
+
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['communicationname'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['required'] || form.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label"
+                                                        for="priority">Priority</label>
+                                                    <div class="col-md-7">
+                                                        <p-dropdown [options]="Priority_Options"
+                                                            [style]="{'width':'100%'}" formControlName="priority"
+                                                            placeholder="Select Priority" id="priority" id="priority"
+                                                            [(ngModel)]="customfield.priority" [disabled]="offerExpired"
+                                                            (onChange)="isTouched($event.value)">
+                                                        </p-dropdown>
+
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['priority'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['communicationFieldItems'].controls[i].controls['priority'].errors['required']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="trigger">Trigger</label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <p-dropdown [options]="Trigger_Option"
+                                                            [style]="{'width':'100%'}" formControlName="trigger"
+                                                            placeholder="Select Trigger" id="trigger" id="trigger"
+                                                            [(ngModel)]="customfield.trigger" [disabled]="offerExpired"
+                                                            (onChange)="isTouched($event.value)">
+                                                        </p-dropdown>
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['trigger'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['communicationFieldItems'].controls[i].controls['trigger'].errors['required']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="day">-</label>
+                                                    <div class="input-group col-md-7">
+                                                        <input type="number" *ngIf="offerExpired" min="0" id="day"
+                                                            name="day" class="form-control" placeholder="Enter Days"
+                                                            formControlName="day" [(ngModel)]="customfield.day"
+                                                            (blur)="removeZeroCommunication(i)" disabled>
+
+                                                        <input type="number" *ngIf="!offerExpired" min="0" id="day"
+                                                            name="day" class="form-control" placeholder="Enter Days"
+                                                            formControlName="day" [(ngModel)]="customfield.day"
+                                                            (blur)="removeZeroCommunication(i)"
+                                                            (keyup)="isTouched($event)">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">Day(s)</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="cust_err_msg offset-md-5"
+                                                        *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['day'].valid">
+                                                        <span
+                                                            *ngIf="form.controls['communicationFieldItems'].controls[i].controls['day'].errors['required']"
+                                                            class="text-danger">
+                                                            This field is required.
+                                                        </span>
+                                                        <span
+                                                            *ngIf="form.controls['communicationFieldItems'].controls[i].controls['day'].errors['pattern']"
+                                                            class="text-danger">Enter valid value.</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="subject">
+                                                        Subject
+                                                    </label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" *ngIf="offerExpired" class="form-control"
+                                                            placeholder="Enter name" formControlName="subject"
+                                                            id="subject" [(ngModel)]="customfield.subject" disabled>
+
+                                                        <input type="text" *ngIf="!offerExpired" class="form-control"
+                                                            placeholder="Enter Subject" formControlName="subject"
+                                                            id="subject" [(ngModel)]="customfield.subject"
+                                                            (keyup)="isTouched($event)">
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['subject'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['communicationFieldItems'].controls[i].controls['subject'].errors['required'] || form.controls['communicationFieldItems'].controls[i].controls['subject'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form row">
+                                                <div class="col-md-9">
+                                                    <label class="col-form-label" for="message">Message</label>
+                                                    <div>
+                                                        <!-- <ckeditor [editor]="Editor" formControlName="message"
+                                                        [(ngModel)]="customfield.message" (ready)="onReady($event)">
+                                                    </ckeditor> -->
+                                                        <!-- (click)="getCursor($event)" (keyup)="getCursor($event)" -->
+                                                        <div>
+                                                            <div [ngxSummernote]="config" #editor
+                                                                [(ngModel)]="customfield.message"
+                                                                [(summernoteModel)]="customfield.message" id="editor"
+                                                                formControlName="message" (keyup)="isTouched($event)">
+                                                            </div>
+                                                        </div>
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['communicationFieldItems'].controls[i].controls['message'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['communicationFieldItems'].controls[i].controls['message'].errors['required'] ||
+                                                                                                        form.controls['communicationFieldItems'].controls[i].controls['message'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 bunch-list">
+                                                    <label class="col-form-label">List of Dynamic Fields</label>
+                                                    <ul>
+                                                        <li (click)="append('||offer_date||')">offer_date</li>
+                                                        <li (click)="append('||candidate_name||')">candidate_name</li>
+                                                        <li (click)="append('||title||')">title</li>
+                                                        <li (click)="append('||location||')">location</li>
+                                                        <li (click)="append('||joining_date||')">joining_date</li>
+                                                        <li (click)="append('||expiry_date||')">expiry_date</li>
+                                                        <li (click)="append('||acceptance_date||')">acceptance_date</li>
+                                                    </ul>
+                                                    <p style="color: grey;">If you want to use this content click on it
+                                                        and paste it in editor or simply type it like ||offer_date||.
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-right ">
+                                            <button type="button" class="btn btn-danger"
+                                                (click)="remove_communication(i)"
+                                                [disabled]="offerExpired">Delete</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right col-md-12 form-group" *ngIf="isAdHoc_ButtonShow || is_Edit">
+                                <label> &nbsp; </label>
+                                <button class="btn btn-sm btn-primary" (click)="addMoreCommunication()"
+                                    [disabled]="offerExpired" type="button">
+                                    Add AdHoc Communication
+                                </button>
+                            </div>
+                        </ng-container>
+                        <!-- communication -->
+
+                        <!-- AdHoc -->
+                        <!-- communication -->
+                        <ng-container formArrayName="AdHocCommunication">
+                            <div class="form-group row" formGroupName="{{i}}"
+                                *ngFor="let customfield of AdHocCommunicationData; let i=index">
+                                <div class="col-md-12 mt-3">
+                                    <div class="card communication-fills">
+                                        <div class="card-header h5">AdHoc Communication - {{i+1}}
+
+                                            <!-- <button class="btn btn-danger pull-right" type="button"
+                                                (click)="remove_AdHoc_communication(i)"
+                                                [disabled]="offerExpired">Delete</button>
+                                            <button type="button" class=" btn btn-secondary  pull-right mr-2"
+                                                (click)="add_new_AdHoc_communication(i)" [disabled]="offerExpired">Add
+                                                AdHoc
+                                                Communication</button> -->
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="name">
+                                                        Communication Name
+                                                    </label>
+                                                    <!-- [(ngModel)]="customfield.communicationname" -->
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" *ngIf="offerExpired" class="form-control"
+                                                            placeholder="Enter Name"
+                                                            formControlName="AdHoc_communicationname"
+                                                            id="AdHoc_communicationname"
+                                                            [(ngModel)]="customfield.AdHoc_communicationname" disabled>
+
+                                                        <input type="text" class="form-control" *ngIf="!offerExpired"
+                                                            placeholder="Enter name"
+                                                            formControlName="AdHoc_communicationname"
+                                                            id="AdHoc_communicationname"
+                                                            [(ngModel)]="customfield.AdHoc_communicationname"
+                                                            (keyup)="isTouched($event)">
+
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_communicationname'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_communicationname'].errors['required'] || form.controls['AdHocCommunication'].controls[i].controls['AdHoc_communicationname'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label"
+                                                        for="trigger">Priority</label>
+                                                    <div class="col-md-7">
+                                                        <!-- [(ngModel)]="customfield.priority" -->
+                                                        <!-- <select id="AdHoc_priority" name="select1" class="form-control"
+                                                            formControlName="AdHoc_priority"
+                                                            [(ngModel)]="customfield.AdHoc_priority" disabled="offerExpired">
+                                                            <option value="" selected="selected">Please select
+                                                                Priority
+                                                            </option>
+                                                            <option value="High">High</option>
+                                                            <option value="Medium">Medium</option>
+                                                            <option value="Low">Low</option>
+                                                        </select> -->
+
+                                                        <p-dropdown [options]="Priority_Options"
+                                                            [style]="{'width':'100%'}" formControlName="AdHoc_priority"
+                                                            placeholder="Select Priority" id="AdHoc_priority"
+                                                            id="AdHoc_priority" [(ngModel)]="customfield.AdHoc_priority"
+                                                            [disabled]="offerExpired"
+                                                            (onChange)="isTouched($event.value)">
+                                                        </p-dropdown>
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_priority'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_priority'].errors['required']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label"
+                                                        for="AdHoc_trigger">Trigger</label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <!--  [(ngModel)]="customfield.trigger" -->
+                                                        <p-dropdown [options]="Trigger_Option"
+                                                            [style]="{'width':'100%'}" formControlName="AdHoc_trigger"
+                                                            placeholder="Select Trigger" id="AdHoc_trigger"
+                                                            id="AdHoc_trigger" [(ngModel)]="customfield.AdHoc_trigger"
+                                                            [disabled]="offerExpired"
+                                                            (onChange)="isTouched($event.value)">
+                                                        </p-dropdown>
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_trigger'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_trigger'].errors['required']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="AdHoc_day">-</label>
+                                                    <div class="input-group col-md-7">
+                                                        <!-- [(ngModel)]="customfield.day" -->
+                                                        <input type="number" *ngIf="offerExpired" min="0" id="AdHoc_day"
+                                                            name="AdHoc_day" class="form-control"
+                                                            placeholder="Enter Days" formControlName="AdHoc_day"
+                                                            [(ngModel)]="customfield.AdHoc_day" (blur)="removeZero(i)"
+                                                            disabled>
+
+                                                        <input type="number" min="0" *ngIf="!offerExpired"
+                                                            id="AdHoc_day" name="AdHoc_day" class="form-control"
+                                                            placeholder="Enter Days" formControlName="AdHoc_day"
+                                                            [(ngModel)]="customfield.AdHoc_day" (blur)="removeZero(i)"
+                                                            (keyup)="isTouched($event)">
+
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">Day(s)</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="cust_err_msg offset-md-5"
+                                                        *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_day'].valid">
+                                                        <span
+                                                            *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_day'].errors['required']"
+                                                            class="text-danger">
+                                                            This field is required.
+                                                        </span>
+                                                        <span
+                                                            *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_day'].errors['pattern']"
+                                                            class="text-danger">Enter valid value.</span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-goup no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="AdHoc_subject">
+                                                        Subject
+                                                    </label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" *ngIf="offerExpired" class="form-control"
+                                                            placeholder="Enter Subject" formControlName="AdHoc_subject"
+                                                            id="AdHoc_subject" [(ngModel)]="customfield.AdHoc_subject"
+                                                            disabled>
+                                                        <input type="text" *ngIf="!offerExpired" class="form-control"
+                                                            placeholder="Enter Subject" formControlName="AdHoc_subject"
+                                                            id="AdHoc_subject" [(ngModel)]="customfield.AdHoc_subject"
+                                                            (keyup)="isTouched($event)">
+
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_subject'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_subject'].errors['required'] || form.controls['AdHocCommunication'].controls[i].controls['AdHoc_subject'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form row">
+                                                <div class="col-md-9 pr-20">
+                                                    <label class="col-form-label" for="AdHoc_message">Message</label>
+                                                    <!-- [(ngModel)]="customfield.AdHoc_message"  -->
+                                                    <div>
+                                                        <!-- (click)="getCursor($event)" (keyup)="getCursor($event)"; -->
+                                                        <div>
+                                                            <div [ngxSummernote]="config" #editor
+                                                                [(summernoteModel)]="customfield.AdHoc_message"
+                                                                id="editor" [(ngModel)]="customfield.AdHoc_message"
+                                                                formControlName="AdHoc_message" disabled="offerExpired"
+                                                                (keyup)="isTouched($event)">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="cust_err_msg"
+                                                            *ngIf="form_validation && !form.controls['AdHocCommunication'].controls[i].controls['AdHoc_message'].valid">
+                                                            <span
+                                                                *ngIf="form.controls['AdHocCommunication'].controls[i].controls['AdHoc_message'].errors['required'] || form.controls['AdHocCommunication'].controls[i].controls['AdHoc_message'].errors['whitespace']"
+                                                                class="text-danger">
+                                                                This field is required.
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 bunch-list">
+                                                    <label class="col-form-label">List of Dynamic Fields</label>
+                                                    <ul>
+                                                        <li (click)="append('||offer_date||')">offer_date</li>
+                                                        <li (click)="append('||candidate_name||')">candidate_name</li>
+                                                        <li (click)="append('||title||')">title</li>
+                                                        <li (click)="append('||location||')">location</li>
+                                                        <li (click)="append('||joining_date||')">joining_date</li>
+                                                        <li (click)="append('||expiry_date||')">expiry_date</li>
+                                                        <li (click)="append('||acceptance_date||')">acceptance_date</li>
+                                                    </ul>
+                                                    <p style="color: grey;">If you want to use this content click on it
+                                                        and paste it in editor or simply type it like ||offer_date||.
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="card-footer text-right ">
+                                            <button type="button" class=" btn  btn-primary "
+                                                (click)="add_new_AdHoc_communication(i)" [disabled]="offerExpired">Add
+                                                AdHoc
+                                                Communication</button>
+                                            <button class="btn btn-danger  mr-2 " type="button"
+                                                (click)="remove_AdHoc_communication(i)"
+                                                [disabled]="offerExpired">Delete</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- communication -->
+                        <!-- AdHoc -->
+                        <!-- //summernote -->
+                    </div>
+
+
+
+
+                    <div class="card-footer text-right">
+                        <p *ngIf="!form.valid && is_submitted" class="text-danger">
+                            Please review fields with error and Submit again.
+                        </p>
+                        <button type="submit" class="btn btn-md btn-primary" (click)="onSubmit(form.valid)"
+                            [disabled]="show_spinner">
+                            Submit <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
+                        <button type="button" class="btn btn-md btn-danger" (click)='cancel()'>
+                            Cancel</button>
+                    </div>
+
+                </form>
+            </div>
+            <!-- add-edit -->
+
+            <!-- view -->
+            <div class="card"
+                *ngIf="is_View && (userDetail.role === 'employer' || userDetail.role === 'sub-employer' || userDetail.role === 'admin')">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">View Offer</strong>
+                </div>
+                <div class="card-body detail-box" *ngIf="resData">
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Candidate Detail</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Email</strong>
+                            <p>{{resData.user_id.email}}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Candidate Name</strong>
+                            <p>{{candidateData.firstname}} {{candidateData.lastname}}</p>
+                        </div>
+                    </div>
+
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-6">
+                            <strong>Title</strong>
+                            <p>{{resData.title}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Location</strong>
+                            <p>{{resData.location.city | titlecase}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Salary Detail</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Salary Type</strong>
+                            <p>{{resData.salarytype| titlecase}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary">
+                            <strong>Salary</strong>
+                            <p>{{resData.salary}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary_from">
+                            <strong>Salary From</strong>
+                            <p>{{resData.salary_from}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary_to">
+                            <strong>Salary To</strong>
+                            <p>{{resData.salary_to}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salaryduration && resData.salaryduration !== 'null'">
+                            <strong>Hourly Salary Duration</strong>
+                            <p>{{resData.salaryduration}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Offer Dates & Type</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Offer Date</strong>
+                            <p>{{resData.createdAt | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Joining Date</strong>
+                            <p>{{resData.joiningdate | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Expiry Date</strong>
+                            <p>{{resData.expirydate | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Acceptance Date</strong>
+                            <p>{{isAcceptedView}}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>HireLock Offer Type</strong>
+                            <p>{{resData.offertype}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Notes</strong>
+                            <p>{{resData.notes}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Offer Status</strong>
+                            <p>{{resData.status}}</p>
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Commit Status
+                        </div>
+                        <div class="col-md-6 ">
+                            {{resData.commitstatus}}
+                        </div>
+                    </div> -->
+
+                    <!-- custom fields -->
+                    <div class="row viewoffers-info" *ngIf="isCustomFieldView">
+                        <div class="col-md-12">
+                            <h3>Custom Field Details</h3>
+                        </div>
+                        <div class="col-md-6" *ngFor="let field of resData.customfeild">
+                            <div *ngIf="field.value">
+                                <strong>{{field.key|titlecase}}</strong>
+                                <p>{{field.value ? field.value : '-'}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row viewoffers-info" *ngIf="resData.groupName || resData.AdHoc">
+                        <div class="col-md-12">
+                            <h3>Communication Details</h3>
+                        </div>
+                        <div class="col-md-12" *ngIf="resData.groupName">
+                            <strong>Group</strong>
+                            <p>{{resData.groupName ? resData.groupName : '-'}}</p>
+                        </div>
+                    </div>
+                    <!-- group details -->
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-3">
+                            <strong>High - UnOpened</strong>
+                            <div class="input-group  mb-3">
+                                <div class="form-control">
+                                    {{resData.high_unopened}}
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>High - NotReplied</strong>
+                            <div class="input-group  mb-3">
+                                <div class="form-control">
+                                    {{resData.high_notreplied}}
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Medium - UnOpened</strong>
+                            <div class="input-group  mb-3">
+                                <div class="form-control">
+                                    {{resData.medium_unopened}}
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>Medium - NotReplied</strong>
+                            <div class="input-group  mb-3">
+                                <div class="form-control">
+                                    {{resData.medium_notreplied}}
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- group details -->
+
+                    <!-- communication -->
+                    <div class="row" *ngIf="resData.communication">
+                        <div class="col-md-12 mt-3" *ngFor="let communication of resData.communication;  let i = index">
+                            <div class="card">
+                                <div class="card-header h5">Communication - {{i+1}} </div>
+                                <div class="card-body">
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">
+                                            Communication Name
+                                        </label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.communicationname}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">Priority</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.priority}}
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Trigger</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.trigger}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">
+                                            -
+                                        </label>
+                                        <div class="col-md-4 detail-input d-flex">
+                                            <div class="input-group"> {{communication.day}} </div>
+                                            <span class="input-group-text">Day(s)</span>
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Subject</label>
+                                        <div class="col-md-6 detail-input">
+                                            {{communication.subject}}
+                                        </div>
+                                    </div>
+
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Message</label>
+                                        <div class="col-md-9 detail-input">
+                                            <!-- <ckeditor [editor]="Editor" [(ngModel)]="communication.message"
+                                                [ngModelOptions]="{standalone: true}" [disabled]="true">
+                                            </ckeditor> -->
+                                            <div>
+                                                <div [ngxSummernote]="config" id="editor"
+                                                    [(ngModel)]="communication.message" readonly="true">
+                                                </div>
+                                                <!-- <div>
+                                                    <textarea id="editor" style="width: 100%; height: 100px;"
+                                                        [(ngModel)]="communication.message" #editor disabled></textarea>
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">
+                                            Email Open Date
+                                        </label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.open_date | date: 'dd/MM/yyyy': 'utc'}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">Email Replied Date</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.reply_date | date: 'dd/MM/yyyy': 'utc'}}
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- communication -->
+
+                    <!-- AdHoc communication -->
+                    <div class="row" *ngIf="resData.AdHoc">
+                        <div class="col-md-12 mt-3" *ngFor="let communication of resData.AdHoc;  let i = index">
+                            <div class="card">
+                                <div class="card-header h5">AdHoc Communication - {{i+1}} </div>
+                                <div class="card-body">
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">
+                                            Communication Name
+                                        </label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.AdHoc_communicationname}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">Priority</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.AdHoc_priority}}
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Trigger</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.AdHoc_trigger}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">
+                                            -
+                                        </label>
+                                        <div class="col-md-4 detail-input d-flex">
+                                            <div class="input-group">
+                                                {{communication.AdHoc_day}}
+                                            </div>
+                                            <span class="input-group-text">Day(s)</span>
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Subject</label>
+                                        <div class="col-md-6 detail-input">
+                                            {{communication.AdHoc_subject}}
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">Message</label>
+                                        <div class="col-md-9 detail-input">
+                                            <!-- <ckeditor [editor]="Editor" [(ngModel)]="communication.AdHoc_message"
+                                                [ngModelOptions]="{standalone: true}" [disabled]="true">
+                                            </ckeditor> -->
+                                            <div>
+                                                <!-- {{communication.AdHoc_message}} -->
+                                                <div [ngxSummernote]="config" #editor
+                                                    [(ngModel)]="communication.AdHoc_message" id="editor">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row detail-panel">
+                                        <label class="col-md-2 detail-label">
+                                            Email Open Date
+                                        </label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.AdHoc_open_date | date: 'dd/MM/yyyy': 'utc'}}
+                                        </div>
+                                        <label class="col-md-2 detail-label">Email Replied Date</label>
+                                        <div class="col-md-4 detail-input">
+                                            {{communication.AdHoc_reply_date  | date: 'dd/MM/yyyy': 'utc' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AdHoc communication -->
+
+                </div>
+                <div class="card-footer text-right">
+
+                    <!-- <button *ngIf="userDetail.role === 'candidate'" type="button" class="btn btn-md btn-success"
+                        (click)="Accept(resData._id)" [disabled]="resData.status === 'Accepted'">
+                        Accept</button> -->
+                    <button type="button" class="btn btn-md btn-primary" (click)='cancel()'>
+                        Back</button>
+                </div>
+            </div>
+            <!-- view -->
+
+            <!-- candidate view -->
+            <!-- popup -->
+            <ng-template #content2 let-c="close" let-d="dismiss">
+                <div class="modal-header instructions-popup-head information-popup-head-01">
+                    <h4 class="modal-title" id="modal-basic-title"><i class="icon-info"></i>
+                        Information</h4>
+                    <button type="button" id="closeBtn" class="close" aria-label="Close"
+                        (click)="d('Cross click'); disabledAccept()"><i class="fa fa-times"> </i></button>
+                </div>
+                <div class="modal-body instructions-popup-body information-popup-body-01">
+                    <!-- <h5></h5> -->
+
+                    <h5 class="text-decoration">{{Info_msg}}
+                    </h5>
+                    <!-- <a *ngIf="!isNoCommit" href="termsandcondition" target="_blank">Terms and Conditions</a><br> -->
+                    <!-- <input type="radio" id="accept" value="accept" name="accept" formControlName="accept"
+                                    (click)="accept($event)"> -->
+                    <p-radioButton name="accept" value="accept" [(ngModel)]="selectedValue"
+                        (onClick)="acceptOffer($event)" *ngIf="!isNoCommit"></p-radioButton>
+                    <label for="accept" *ngIf="!isNoCommit">Accept</label>
+
+
+
+                    <!-- <p-radioButton name="notAccept" value="notAccept" [(ngModel)]="selectedValue"
+                                    (onClick)="acceptOffer($event)">
+                                </p-radioButton>
+                                <label for="accept">None</label> -->
+
+                </div>
+                <div class="modal-footer instructions-popup-footer">
+                    <button type="button" id="acceptbtn" class="btn btn-primary" disabled
+                        *ngIf="!isAccept && !isNoCommit ">Accept</button>
+                    <button type="button" id="acceptbtn" class="btn btn-primary" *ngIf="isAccept || isNoCommit"
+                        (click)="acceptedOffer()">Accept</button>
+                    <button type="button" class="back-btn-info btn btn-info"
+                        (click)="d('Cross click'); disabledAccept()">Back</button>
+                </div>
+            </ng-template>
+            <!-- popup -->
+
+            <div class="card" *ngIf="is_View && userDetail.role === 'candidate'">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">View Offer</strong>
+                </div>
+                <div class="card-body detail-box" *ngIf="resData">
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Offer Details</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Offer Date</strong>
+                            <p>{{resData.createdAt | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6 ">
+                            <strong>Employer Name</strong>
+                            <p>{{userName}}</p>
+                        </div>
+                    </div>
+                    <div class="row viewoffers-info">
+
+                        <div class="col-md-6">
+                            <strong>Title</strong>
+                            <p>{{resData.title}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Location</strong>
+                            <p>{{resData.location.city | titlecase}}</p>
+                        </div>
+                    </div>
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Salary Details</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Salary Type</strong>
+                            <p>{{resData.salarytype| titlecase}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary">
+                            <strong>Salary</strong>
+                            <p>{{resData.salary}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary_from">
+                            <strong>Salary From</strong>
+                            <p>{{resData.salary_from}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salary_to">
+                            <strong>Salary To</strong>
+                            <p>{{resData.salary_to}}</p>
+                        </div>
+                        <div class="col-md-6" *ngIf="resData.salaryduration && resData.salaryduration !== 'null'">
+                            <strong>Hourly Salary Duration</strong>
+                            <p>{{resData.salaryduration}}</p>
+                        </div>
+                    </div>
+
+                    <!-- <div class="row viewoffers-info" >
+
+                    </div> -->
+
+
+
+                    <div class="row viewoffers-info">
+                        <div class="col-md-12">
+                            <h3>Offer Dates & Type</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Expiry Date</strong>
+                            <p>{{resData.expirydate | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6 ">
+                            <strong>Acceptance Date</strong>
+                            <p>{{isAcceptedView}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Joining Date</strong>
+                            <p>{{resData.joiningdate | date: 'dd/MM/yyyy': 'utc'}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>HireLock Offer Type</strong>
+                            <p>{{resData.offertype}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Offer Status</strong>
+                            <p>{{resData.status}}</p>
+                        </div>
+                    </div>
+                    <!-- <div class="row viewoffers-info">
+
+
+                    </div> -->
+
+
+                    <!-- <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Notes
+                        </div>
+                        <div class="col-md-6 ">
+                            {{resData.notes}}
+                        </div>
+                    </div> -->
+                    <!-- <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Commit Status
+                        </div>
+                        <div class="col-md-6 ">
+                            {{resData.commitstatus}}
+                        </div>
+                    </div> -->
+                    <div class="row viewoffers-info" *ngIf="isCustomFieldView">
+                        <div class="col-md-12">
+                            <h3>Custom Field Details</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <div *ngFor="let field of resData.customfeild">
+                                <div [ngClass]="{'detail-panel':field.value}">
+                                    <strong *ngIf="field.value"> {{field.key|titlecase}}</strong>
+                                    <p *ngIf="field.value"> {{field.value ? field.value : '-'}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- custom fields -->
+
+
+                    <!-- custom fields -->
+                    <!-- <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Group
+                        </div>
+                        <div class="col-md-6 ">
+                            {{resData.groupName}}
+                        </div>
+                    </div> -->
+
+                </div>
+                <div class="card-footer text-right">
+                    <button *ngIf="userDetail.role === 'candidate' && !isExpired" type="button"
+                        class="btn btn-md btn-success" (click)="Accept(resData._id,resData.offertype)"
+                        [disabled]="resData.status === 'Accepted'|| show_spinner" id="accept ">
+                        Accept <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
+                    <button type="button" class="btn btn-md btn-primary" (click)='cancel()'>
+                        Back</button>
+                </div>
+            </div>
+            <!-- candidate view -->
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

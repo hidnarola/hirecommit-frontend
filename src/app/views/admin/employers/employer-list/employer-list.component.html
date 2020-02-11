@@ -1,0 +1,91 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i>
+                    {{employer_type}} Employer
+                    <!-- <i class="icon-plus pull-right" [routerLink]="['/admin/employers/add']">Add Employer</i> -->
+                </div>
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table"
+                        style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th style="width: 15%;">Email</th>
+                                <th>Country</th>
+                                <th>Company Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let emp of employer_data">
+                                <td>{{emp.username.split(' ')[0]}}</td>
+                                <td>{{emp.username.split(' ')[1]}}</td>
+                                <td>{{emp.user.email}}</td>
+                                <td>{{emp['business'].country}}</td>
+                                <td>{{emp.companyname}}</td>
+                                <!-- <td><label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label></td> -->
+                                <td>
+                                    <button tooltip='View' *ngIf="employer_type === 'Approved'" type="button"
+                                        class="btn btn-sm btn-success" tooltip="View"
+                                        [routerLink]="['/admin/employers/approved_employer/view/',emp._id]">
+                                        <i class="icon-eye"></i>
+                                    </button>
+                                    <button *ngIf="employer_type === 'Approved'" type="button"
+                                        class="btn btn-sm btn-info" tooltip="Edit"
+                                        [routerLink]="['/admin/employers/approved_employer/edit/',emp._id]">
+                                        <i class="icon-pencil"></i>
+                                    </button>
+
+                                    <button tooltip='View' *ngIf="employer_type === 'Approved'" type="button"
+                                        class="btn btn-sm btn-primary" tooltip="Report"
+                                        [routerLink]="['/admin/employers/report/'+emp.user_id+'/list']">
+                                        <i class="fa fa-file"></i>
+                                    </button>
+
+                                    <button tooltip='View' *ngIf="employer_type === 'New'" type="button"
+                                        class="btn btn-sm btn-success" tooltip="View"
+                                        [routerLink]="['/admin/employers/new_employer/view/',emp._id]">
+                                        <i class="icon-eye"></i>
+                                    </button>
+                                    <button *ngIf="employer_type === 'New'" type="button" class="btn btn-sm btn-danger"
+                                        (click)="delete(emp.user_id)" tooltip="Delete">
+                                        <i class="icon-trash"></i>
+                                    </button>
+
+                                    <button *ngIf="employer_type === 'Approved'" type="button"
+                                        class="btn btn-sm btn-secondary"
+                                        [routerLink]="['/admin/employers/approved_employer/' + emp.user_id + '/sub_accounts/list']"
+                                        tooltip="Sub - Accounts">
+                                        <i class="fa fa-users"></i>
+                                    </button>
+
+                                    <button *ngIf="employer_type === 'New'" type="button" class="btn btn-sm btn-primary"
+                                        tooltip='Approve' (click)="aprrove(emp.user_id)" [disabled]="isApproved">
+                                        <i class="icon-check"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="employer_data?.length == 0">
+                            <tr *ngIf="employer_type === 'Approved'">
+                                <td colspan="6" class="no-data-available">No Approved Employer!</td>
+                            </tr>
+
+                            <tr *ngIf="employer_type === 'New'">
+                                <td colspan="6" class="no-data-available">No New Employer!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

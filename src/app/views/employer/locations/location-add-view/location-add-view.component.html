@@ -1,0 +1,107 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- add-edit -->
+            <div class="card" *ngIf="!is_View">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">{{panelTitle}}</strong>
+
+
+                </div>
+                <form class="form-horizontal" [formGroup]="addLocation" (ngSubmit)="onSubmit(addLocation.valid,id)">
+                    <div class="card-body">
+
+                        <!-- <div class="form-group row">
+                            <label multiple class="col-md-3 col-form-label" for="country">Country</label>
+                            <div class="col-md-4">
+
+                                 <select class='select-option form-control' formControlName="country">
+                                    <option placeholder="Select Country" class='option' *ngFor='let option of Country'
+                                        [value]="option._id">
+                                        {{option.country}}</option>
+                                </select>
+
+                                <p-dropdown [options]="Country" placeholder="Select Country" formControlName="country"
+                                    [(ngModel)]="cnt" id="country"></p-dropdown>
+
+
+                                <select ng-model="selected" ng-options="f.name for f in Country | orderBy:'name'"></select>
+                                <span *ngIf="!addLocation.get('country').valid && submitted" class="text-danger">This
+                                    field is required.</span>
+                            </div>
+                        </div> -->
+
+
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="city">
+                                Location
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="Enter location" autocomplete="city"
+                                    [(ngModel)]="detail.city" formControlName="city" id="city"
+                                    (keyup)="isTouched($event)">
+                                <div class="cust_err_msg">
+                                    <span *ngIf="!addLocation.get('city').valid && submitted" class="text-danger">
+                                        <span
+                                            *ngIf="addLocation.get('city').errors['required'] || addLocation.get('city').errors['whitespace']">This
+                                            field is
+                                            required.</span>
+                                    </span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-100 card-footer text-right">
+                        <p *ngIf="!addLocation.valid && submitted" class="text-danger">
+                            Please review fields with error and Submit again.
+                        </p>
+                        <button type="submit" class="btn btn-md btn-primary" [disabled]="show_spinner">
+                            <!-- <i class="fa fa-dot-circle-o"></i> -->
+                            Submit <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
+                        <button type="button" class="btn btn-md btn-danger" (click)="Cancel()">
+                            <!-- <i class="fa fa-ban"></i> -->
+                            Cancel</button>
+                        <!-- <button *ngIf="userDetail.role === 'sub-employer'" type="reset" class="btn btn-md btn-danger"
+                            [routerLink]="['/sub_employer/locations/list']">
+                             <i class="fa fa-ban"></i>
+                        Cancel</button> -->
+
+                    </div>
+                </form>
+            </div>
+            <!-- add-edit -->
+
+
+            <!-- view -->
+            <div class="card" *ngIf="is_View">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">View Location</strong>
+                </div>
+                <div class="card-body detail-box" *ngIf="detail">
+                    <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Location
+                        </div>
+                        <div class="col-md-6 detail-input">
+                            {{detail.city}}
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 card-footer text-right">
+                    <button *ngIf="userDetail.role === 'employer'" type="button" class="btn btn-md btn-primary"
+                        [routerLink]="cancel_link">
+                        Back</button>
+
+                    <button *ngIf="userDetail.role === 'sub-employer'" type="button" class="btn btn-md btn-primary"
+                        [routerLink]="['/sub_employer/locations/list']">
+                        Back</button>
+                </div>
+            </div>
+            <!-- view -->
+
+
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

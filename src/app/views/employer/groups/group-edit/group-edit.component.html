@@ -1,0 +1,570 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-info-circle icon-size" style="cursor: pointer;" (click)="open(content)"></i>
+                    <strong style="font-size: 20px;">{{panelTitle}}</strong>
+                </div>
+                <!-- popup -->
+                <ng-template #content let-c="close" let-d="dismiss">
+                    <div class="modal-header instructions-popup-head">
+                        <h4 class="modal-title" id="modal-basic-title"><i class="icon-info"></i>
+                            Information</h4>
+                        <button type="button" id="closeBtn" class="close" aria-label="Close"
+                            (click)="d('Cross click')"><i class="fa fa-times"> </i></button>
+                    </div>
+                    <div class="modal-body instructions-popup-body">
+                        <h5>Groups(Optional):</h5>
+                        <h6>{{msg}}
+                        </h6>
+
+                    </div>
+                    <!-- <div class="modal-footer instructions-popup-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                (click)="setup(_profile_data[0].user_id._id)">Let's
+                                                Setup</button>
+                                        </div> -->
+                </ng-template>
+                <!-- popup -->
+                <!-- group form -->
+                <form class="form-horizontal" [formGroup]="groupForm" (ngSubmit)="onSubmit(groupForm.valid)">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="name">
+                                <h5>Name</h5>
+                            </label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="Enter group name"
+                                    autocomplete="name" formControlName="name" [(ngModel)]="groupData.name" id="name">
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['name'].valid && isFormSubmitted"
+                                    (keyup)="isTouched($event)">
+                                    <span
+                                        *ngIf="groupForm.controls['name'].errors['required'] ||  groupForm.controls['name'].errors['whitespace']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="d-block text-left col-md-6 col-form-label" for="commitStatus">
+                                <h5>Set no. of days after which alert email will be sent.</h5>
+                            </label>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="ml-4 col-md-3 " for="high_unopened">High - UnOpened</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" min="0" class="form-control" autocomplete="high_unopened"
+                                    formControlName="high_unopened" [(ngModel)]="groupData.high_unopened"
+                                    id="high_unopened" (blur)="removeZero_high_unopened()" (keyup)="isTouched($event)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['high_unopened'].valid && isFormSubmitted">
+                                    <span *ngIf="groupForm.controls['high_unopened'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['high_unopened'].valid">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['high_unopened'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="ml-4 col-md-3 " for="high_notreplied">High - NotReplied</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" class="form-control" autocomplete="high_notreplied"
+                                    formControlName="high_notreplied" [(ngModel)]="groupData.high_notreplied"
+                                    id="high_notreplied" (blur)="removeZero_high_notreplied()"
+                                    (keyup)="isTouched($event)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['high_notreplied'].valid && isFormSubmitted">
+                                    <span *ngIf="groupForm.controls['high_notreplied'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['high_notreplied'].valid ">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['high_notreplied'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="ml-4 col-md-3 " for="medium_unopened">Medium - UnOpened</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" class="form-control" autocomplete="medium_unopened"
+                                    formControlName="medium_unopened" [(ngModel)]="groupData.medium_unopened"
+                                    id="medium_unopened" (blur)="removeZero_medium_unopened()"
+                                    (keyup)="isTouched($event)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['medium_unopened'].valid && isFormSubmitted">
+                                    <span *ngIf="groupForm.controls['medium_unopened'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['medium_unopened'].valid ">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['medium_unopened'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="ml-4 col-md-3 " for="medium_notreplied">Medium - NotReplied</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" class="form-control" autocomplete="medium_notreplied"
+                                    formControlName="medium_notreplied" [(ngModel)]="groupData.medium_notreplied"
+                                    id="medium_notreplied" (blur)="removeZero_medium_notreplied()"
+                                    (keyup)="isTouched($event)">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['medium_notreplied'].valid && isFormSubmitted">
+                                    <span *ngIf="groupForm.controls['medium_notreplied'].errors['required']"
+                                        class="text-danger">
+                                        This field is required.
+                                    </span>
+                                </div>
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['medium_notreplied'].valid ">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['medium_notreplied'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="color:grey; size: 8px;">*UnOpened - No. of days after email is sent and not opened.
+                        </p>
+                        <p style="color:grey;  size: 8px;">*NotReplied - No. of days after email is opened and not
+                            replied.</p>
+
+                        <p style="color:grey;  size: 8px;">** The default days are just a recommendation, please change
+                            them as per your needs.</p>
+
+                        <!-- <div class="form-group row">
+                            <label class="ml-4 col-md-3" for="low_unopened">Low - UnOpened</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" class="form-control" autocomplete="low_unopened"
+                                    formControlName="low_unopened" [(ngModel)]="groupData.low_unopened"
+                                    id="low_unopened">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['low_unopened'].valid && isFormSubmitted">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['low_unopened'].errors['required']">
+                                        This field is required.
+                                    </span>
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['low_unopened'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="ml-4 col-md-3" for="low_notreplied">Low - NotReplied</label>
+                            <div class="input-group col-md-2">
+                                <input type="number" class="form-control" autocomplete="low_notreplied"
+                                    formControlName="low_notreplied" [(ngModel)]="groupData.low_notreplied"
+                                    id="low_notreplied">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Days</span>
+                                </div>
+                                <div class="cust_err_msg"
+                                    *ngIf="!groupForm.controls['low_notreplied'].valid && isFormSubmitted">
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['low_notreplied'].errors['required']">
+                                        This field is required.
+                                    </span>
+                                    <span class="text-danger"
+                                        *ngIf="groupForm.controls['low_notreplied'].errors['pattern']">
+                                        Enter valid data.
+                                    </span>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="form-group row">
+                            <label class="ml-4 col-md-3" for="low_notreplied">
+                                Do you want to add communication?
+                            </label>
+                            <div class="input-group col-md-2">
+                                <p-inputSwitch [(ngModel)]="is_communication_added"
+                                    [ngModelOptions]="{standalone: true}" (onChange)="changeCommunication($event)">
+                                </p-inputSwitch>
+                            </div>
+                        </div> -->
+
+
+                        <!-- communication -->
+                        <ng-container formArrayName="communicationFieldItems">
+                            <div class="form-group row" formGroupName="{{i}}"
+                                *ngFor="let customfield of communicationData; let i=index">
+                                <div class="col-md-12 mt-3">
+                                    <div class="card communication-fills">
+                                        <div class="card-header h5">Communication - {{i+1}}
+                                            <!-- <div class="card-header h5">Communication - {{i+1}}
+                                            <button type="button" class="btn btn-danger pull-right"
+                                                (click)="remove_communication(i)">Delete</button>
+                                            <button type="button" class=" btn btn-secondary  pull-right mr-2"
+                                                (click)="add_new_communication(i)">Add Communication</button> -->
+
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="name">
+                                                        Communication Name
+                                                    </label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" class="form-control" placeholder="Enter name"
+                                                            formControlName="communicationname" id="communicationname"
+                                                            [(ngModel)]="customfield.communicationname"
+                                                            (blur)="removeZeroCommunication(index)"
+                                                            (keyup)="isTouched($event)">
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['required']
+                                                            || groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['whitespace']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label"
+                                                        for="trigger">Priority</label>
+                                                    <div class="col-md-7">
+                                                        <!-- <select id="priority" name="select1" class="form-control"
+                                                            formControlName="priority"
+                                                            [(ngModel)]="customfield.priority">
+                                                            <option value="" selected="selected">Please select
+                                                                priority
+                                                            </option>
+                                                            <option value="High">High</option>
+                                                            <option value="Medium">Medium</option>
+                                                            <option value="Low">Low</option>
+                                                        </select> -->
+                                                        <p-dropdown [options]="Priority_Options"
+                                                            [style]="{'width':'100%'}" formControlName="priority"
+                                                            placeholder="Select Priority" id="priority" id="priority"
+                                                            [(ngModel)]="customfield.priority"
+                                                            (onChange)="isTouched($event)">
+                                                        </p-dropdown>
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['priority'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['priority'].errors['required']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="trigger">Trigger</label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <!-- <select id="trigger" name="select1" class="form-control"
+                                                            formControlName="trigger" [(ngModel)]="customfield.trigger">
+                                                            <option value="" selected="selected">Please select trigger
+                                                            </option>
+                                                            <option value="beforeJoining">Before Joining</option>
+                                                            <option value="afterJoining">After Joining</option>
+                                                            <option value="afterOffer">After Offer</option>
+                                                            <option value="beforeExpiry">Before Expiry</option>
+                                                            <option value="afterExpiry">After Expiry</option>
+                                                            <option value="afterAcceptance">After Acceptance</option>
+                                                        </select> -->
+                                                        <p-dropdown [options]="Trigger_Option"
+                                                            [style]="{'width':'100%'}" formControlName="trigger"
+                                                            placeholder="Select Trigger" id="trigger" id="trigger"
+                                                            [(ngModel)]="customfield.trigger"
+                                                            (onChange)="isTouched($event)">
+                                                        </p-dropdown>
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['trigger'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['trigger'].errors['required']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="day">-</label>
+                                                    <div class="input-group col-md-7">
+                                                        <input type="number" id="day" name="day" class="form-control"
+                                                            placeholder="Enter Days" formControlName="day"
+                                                            [(ngModel)]="customfield.day"
+                                                            (blur)="removeZeroCommunication(i)"
+                                                            (keyup)="isTouched($event)">
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text">Day(s)</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors"
+                                                        class="cust_err_msg offset-md-5">
+                                                        <div class="text-danger"
+                                                            *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors['required']">
+                                                            This field is required.
+                                                        </div>
+                                                        <span
+                                                            *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors['pattern']"
+                                                            class="text-danger">Only Positive
+                                                            Number</span>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="subject">Subject</label>
+                                                    <div class="input-group col-md-7">
+                                                        <input type="text" id="subject" name="subject"
+                                                            class="form-control" placeholder="Enter subject"
+                                                            formControlName="subject" [(ngModel)]="customfield.subject"
+                                                            (keyup)="isTouched($event)">
+
+
+                                                    </div>
+                                                    <div class="offset-md-5"
+                                                        *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['subject'].errors"
+                                                        style="color: red;">
+                                                        <div
+                                                            *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['subject'].errors['required'] || groupForm.controls['communicationFieldItems'].controls[i].get('subject').errors['whitespace']">
+                                                            This field is required.
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form row">
+                                                <div class="col-md-9">
+                                                    <label class="col-form-label" for="message">Message</label>
+                                                    <div>
+                                                        <div>
+                                                            <!-- (click)="getCursor($event)" (keyup)="getCursor($event)" -->
+                                                            <div [ngxSummernote]="config" #editor
+                                                                [(summernoteModel)]="customfield.message" id="editor"
+                                                                formControlName="message"
+                                                                [(ngModel)]="customfield.message"
+                                                                (keyup)="isTouched($event)">
+                                                            </div>
+                                                        </div>
+                                                        <!-- [(ngModel)]="customfield.communicationname"> -->
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['message'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['message'].errors['required'] || groupForm.controls['communicationFieldItems'].controls[i].get('message').errors['whitespace']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 bunch-list">
+                                                    <label class="col-form-label">List of Dynamic Fields</label>
+                                                    <ul>
+                                                        <li (click)="append('||offer_date||')">offer_date</li>
+                                                        <li (click)="append('||candidate_name||')">candidate_name</li>
+                                                        <li (click)="append('||title||')">title</li>
+                                                        <li (click)="append('||location||')">location</li>
+                                                        <li (click)="append('||joining_date||')">joining_date</li>
+                                                        <li (click)="append('||expiry_date||')">expiry_date</li>
+                                                        <li (click)="append('||acceptance_date||')">acceptance_date</li>
+                                                    </ul>
+                                                    <p style="color: grey;">If you want to use this content click on it
+                                                        and paste it in editor or simply type it like ||offer_date||.
+                                                    </p>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="card-footer text-right ">
+                                            <button type="button" class=" btn btn-primary "
+                                                (click)="add_new_communication(i)">Add
+                                                Communication</button>
+
+                                            <button type="button" class="btn btn-danger pull-right"
+                                                (click)="remove_communication(i)">Delete</button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <!-- communication -->
+
+
+                        <!-- communication -->
+                        <!-- <ng-container formArrayName="communicationFieldItems">
+                            <div class="form-group row" formGroupName="{{i}}" *ngFor="let customfield of communicationData; let i=index">
+                                <div class="col-md-12 mt-3">
+                                    <div class="card communication-fills">
+
+                                        <div class="card-header h5">Record - {{i+1}}
+                                            <span class="input-group-text pull-right" *ngIf="i < 1" (click)="add_new_communication(i)"><i
+                                                    class="icon-plus"></i></span>
+                                            <span class="input-group-text pull-right" *ngIf="i > 0" (click)="remove_communication(i)"><i
+                                                    class="icon-minus"></i></span>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="name">
+                                                        Communication Name
+                                                    </label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <input type="text" class="form-control" placeholder="Enter name"
+                                                            formControlName="communicationname" id="communicationname"
+                                                            [(ngModel)]="customfield.communicationname">
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['required']
+                                                                                    || groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['whitespace']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="trigger">Trigger</label>
+                                                    <div class="col-md-7 no-gutters">
+                                                        <select id="trigger" name="select1" class="form-control" formControlName="trigger"
+                                                            [(ngModel)]="customfield.trigger">
+                                                            <option value="" selected="selected">Please select trigger
+                                                            </option>
+                                                            <option value="beforeJoining">Before Joining</option>
+                                                            <option value="afterJoining">After Joining</option>
+                                                            <option value="afterOffer">After Offer</option>
+                                                            <option value="beforeExpiry">Before Expiry</option>
+                                                            <option value="afterExpiry">After Expiry</option>
+                                                            <option value="afterAcceptance">After Acceptance</option>
+                                                        </select>
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['trigger'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['trigger'].errors['required']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group no-gutters row">
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="day">Day</label>
+                                                    <div class="col-md-7">
+                                                        <input type="number" id="day" name="day" class="form-control" placeholder="Enter Days"
+                                                            formControlName="day" [(ngModel)]="customfield.day">
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors['required']">
+                                                                This field is required.
+                                                            </div>
+                                                            <span
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['day'].errors['pattern']"
+                                                                class="text-danger">Only Positive
+                                                                Number</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 row no-gutters">
+                                                    <label class="col-md-5 col-form-label" for="trigger">Priority</label>
+                                                    <div class="col-md-7">
+                                                        <select id="priority" name="select1" class="form-control" formControlName="priority"
+                                                            [(ngModel)]="customfield.priority">
+                                                            <option value="" selected="selected">Please select
+                                                                priority
+                                                            </option>
+                                                            <option value="High">High</option>
+                                                            <option value="Medium">Medium</option>
+                                                            <option value="Low">Low</option>
+                                                        </select>
+                                                        <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['priority'].errors"
+                                                            class="cust_err_msg">
+                                                            <div class="text-danger"
+                                                                *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['priority'].errors['required']">
+                                                                This field is required.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form row">
+                                                <label class="col-md-12 col-form-label" for="message">Message</label>
+                                                <div class="col-md-12">
+                                                    <ckeditor [editor]="Editor" formControlName="message" [(ngModel)]="customfield.message"
+                                                        (ready)="onReady($event)">
+                                                    </ckeditor>
+
+                                                    <div *ngIf="isFormSubmitted && groupForm.controls['communicationFieldItems'].controls[i].controls['message'].errors"
+                                                        class="cust_err_msg">
+                                                        <div class="text-danger"
+                                                            *ngIf="groupForm.controls['communicationFieldItems'].controls[i].controls['message'].errors['required']  || groupForm.controls['communicationFieldItems'].controls[i].controls['communicationname'].errors['whitespace']">
+                                                            This field is required.
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container> -->
+                        <!-- communication -->
+
+
+                    </div>
+                    <div class="w-100 card-footer text-right">
+                        <p *ngIf="!groupForm.valid && isFormSubmitted" class="text-danger">
+                            Please review fields with error and Submit again.
+                        </p>
+                        <button type="submit" class="btn btn-md btn-primary" [disabled]="show_spinner">
+                            Submit <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
+                        <button type="button" class="btn btn-md btn-danger" (click)="cancel()">
+                            Cancel</button>
+
+                    </div>
+                </form>
+                <!-- group form -->
+
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

@@ -1,0 +1,103 @@
+<!-- [navbarBrandRouterLink]="['/dashboard']" -->
+
+
+<app-header [fixed]="true"
+  [navbarBrandFull]="{src: 'assets/img/new-logo.png', width: 140, height: 55, alt: 'CoreUI Logo'}"
+  [navbarBrandMinimized]="{src: 'assets/img/logo-icon.png', width: 30, height: 30, alt: 'CoreUI Logo'}"
+  [sidebarToggler]="'lg'" [asideMenuToggler]="'lg'" [navbarBrandRouterLink]="link">
+
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item dropdown" dropdown placement="bottom right">
+      <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+        dropdownToggle (click)="false">
+        <p style="font-size: 20px; font-family: 'Times New Roman', Times, serif; display: contents">{{name}}</p>
+        <img class="img-avatar" src="assets/img/user.png" alt="admin@bootstrapmaster.com" />
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
+        <div class="dropdown-header text-center"><strong>Settings</strong></div>
+        <a class="dropdown-item"
+          *ngIf="(userDetail.role != 'admin' &&  userDetail.role != 'sub-employer') && (_profile_data[0].user_id.email_verified)"
+          (click)="profile()" style="cursor: pointer;">
+          <i class="icon-user"></i> Profile
+        </a>
+        <a class="dropdown-item" (click)="changepassword()"
+          *ngIf="userDetail.role != 'admin' && _profile_data[0].user_id.email_verified" style="cursor: pointer;">
+          <i class="fa fa-lock"></i> Change Password
+        </a>
+        <a class="dropdown-item" [routerLink]="['/admin/change-password']" *ngIf="userDetail.role == 'admin'"
+          style="cursor: pointer;">
+          <i class="fa fa-lock"></i> Change Password
+        </a>
+
+
+
+        <!-- <a class="dropdown-item" [routerLink]="['/employer/custom_fields/list']">
+          <i class="fa fa-lock"></i> Custom Field
+        </a> -->
+        <a class="dropdown-item" (click)="logouttoLanding()" style="cursor: pointer;">
+          <i class=" fa fa-power-off"></i> Logout
+        </a>
+        <!-- <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">
+          <i class=" fa fa-power-off"></i> Logout
+        </a> -->
+        <!-- <a class="dropdown-item" (click)="ViewProfile();"><i class="icon-user"></i> Profile</a>
+        <a class="dropdown-item" (click)="changepassword();"><i class="fa fa-lock"></i> Change Password</a>
+        <a class="dropdown-item" (click)="customFeild();"><i class="fa fa-lock"></i> Custom Field</a>
+        <a class="dropdown-item" (click)="logout();"><i class="fa fa-lock"></i> Logout</a> -->
+      </div>
+    </li>
+  </ul>
+</app-header>
+
+<div class="app-body">
+  <app-sidebar [fixed]="true" [display]="'lg'">
+    <app-sidebar-nav [navItems]="navItems" [perfectScrollbar] [disabled]="sidebarMinimized">
+    </app-sidebar-nav>
+    <app-sidebar-minimizer></app-sidebar-minimizer>
+  </app-sidebar>
+  <!-- Main content -->
+  <main class="main">
+    <!-- Breadcrumb -->
+    <!-- breaking change 'cui-breadcrumb' -->
+    <cui-breadcrumb>
+      <!-- Breadcrumb Menu-->
+    </cui-breadcrumb>
+    <!-- deprecation warning for 'app-breadcrumb' -->
+    <!--<ol class="breadcrumb">-->
+    <!--<app-breadcrumb></app-breadcrumb>-->
+    <!--&lt;!&ndash; Breadcrumb Menu&ndash;&gt;-->
+    <!--<li class="breadcrumb-menu d-md-down-none">-->
+    <!--<div class="btn-group" role="group" aria-label="Button group with nested dropdown">-->
+    <!--<a class="btn" href="#"><i class="icon-speech"></i></a>-->
+    <!--<a class="btn" [routerLink]="['/dashboard']"><i class="icon-graph"></i> &nbsp;Dashboard</a>-->
+    <!--<a class="btn" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>-->
+    <!--</div>-->
+    <!--</li>-->
+    <!--</ol>-->
+    <div class="container-fluid">
+      <router-outlet></router-outlet>
+      <ng-template #content let-c="close" let-d="dismiss">
+        <div class="modal-header instructions-popup-head">
+          <h4 class="modal-title" id="modal-basic-title">Instructions</h4>
+          <button type="button" id="closeBtn" style="visibility: hidden;" class="close" aria-label="Close"
+            (click)="d('Cross click')"></button>
+        </div>
+        <div class="modal-body instructions-popup-body">
+          <h5>Please take a few minutes to set up:</h5>
+          <h6>Locations(Required)<p class="ast"> *</p>
+          </h6>
+          <h6>Communication Groups(Optional)</h6>
+          <h6>Sub Accounts(Optional)</h6>
+        </div>
+        <div class="modal-footer instructions-popup-footer">
+          <button type="button" class="btn btn-primary" (click)="setup(_profile_data[0].user_id._id)">Let's
+            Setup</button>
+        </div>
+      </ng-template>
+    </div> <!-- /.container-fluid -->
+  </main>
+</div>
+<app-footer>
+  <span><a>HireCommit</a> &copy; {{currentYear}}</span>
+  <!-- <span class="ml-auto">Powered by <a href="https://coreui.io/angular">CoreUI for Angular</a></span> -->
+</app-footer>

@@ -1,0 +1,80 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+
+            <!-- add-edit -->
+            <div class="card" *ngIf="!isView">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">{{panelTitle}}</strong>
+
+                </div>
+                <form class="form-horizontal" [formGroup]="addCustomFeild" (ngSubmit)="onSubmit(addCustomFeild.valid)">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="key">Custom Field </label>
+                            <div class="col-md-4">
+                                <input type="text" [(ngModel)]="data.key" id="key" name="key" class="form-control"
+                                    placeholder="Custom Field" formControlName="key" (keyup)="isTouched($event)">
+
+                                <div class="cust_err_msg">
+                                    <span *ngIf="!addCustomFeild.get('key').valid && submitted" class="text-danger">
+                                        <span
+                                            *ngIf="addCustomFeild.get('key').errors['required'] || addCustomFeild.controls['key'].errors['whitespace']">This
+                                            field is required.</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-footer text-right">
+                        <p *ngIf="!addCustomFeild.valid && submitted" class="text-danger">
+                            Please review fields with error and Submit again.
+                        </p>
+                        <button type="submit" class="btn btn-md btn-primary" [disabled]="show_spinner">
+                            <!-- <i class="fa fa-dot-circle-o"></i> -->
+                            Submit <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
+
+
+                        <button type="button" class="btn btn-md btn-danger" (click)="Cancel()">
+                            <!-- <i class="fa fa-ban"></i> -->
+                            Cancel</button>
+                        <!-- <button *ngIf="userDetail.role === 'sub-employer'" type="reset" class="btn btn-md btn-danger"
+                            [routerLink]="['/sub_employer/custom_fields/list']">
+                            <i class="fa fa-ban"></i>
+                            Cancel</button> -->
+                    </div>
+                </form>
+            </div>
+            <!-- add-edit -->
+
+            <!-- view -->
+            <div class="card" *ngIf="isView">
+                <div class="card-header">
+                    <strong style="font-size: 20px;">View Custom Field</strong>
+                </div>
+                <div class="card-body detail-box" *ngIf="data">
+                    <div class="row detail-panel">
+                        <div class="col-md-3 detail-label lbl">
+                            Custom Field
+                        </div>
+                        <div class="col-md-6 detail-input">
+                            {{data.key}}
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 card-footer text-right">
+                    <button *ngIf="userDetail.role === 'employer'" type="button" class="btn btn-md btn-primary"
+                        [routerLink]="cancel_link">
+                        Back</button>
+                    <button *ngIf="userDetail.role === 'sub-employer'" type="button" class="btn btn-md btn-primary"
+                        [routerLink]="['/sub_employer/custom_fields/list']">
+                        Back</button>
+                </div>
+            </div>
+            <!-- view -->
+
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

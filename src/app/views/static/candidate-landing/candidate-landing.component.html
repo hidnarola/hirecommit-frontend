@@ -1,0 +1,169 @@
+<header class="header static-page-header">
+    <div class="container">
+        <div class="d-flex">
+            <div class="hirecommit-logo"><a href=""><img src="assets/img/new-logo.png" alt="" /></a></div>
+            <div class="candidate-employer">
+                <a class="active">Candidate</a>
+                <a href="{{employerURL}}">Employer</a>
+            </div>
+            <div class="login-signup">
+                <!-- <a href="http://hirecommit.com/login">Login</a> -->
+                <a [routerLink]="['/login']">Login</a>
+                <span>-</span>
+                <!-- <a href="http://hirecommit.com/candidate_register">Sign up</a> -->
+                <a [routerLink]="['/candidate_register']">Sign up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="static-page">
+    <section class="header-bluepart">
+        <div class="container">
+            <div class="d-flex">
+                <div class="header-bluepart-l">
+                    <h1>
+                        <small> {{header_bluepart.main_heading_1}}</small><strong>
+                            {{header_bluepart.main_heading_2}}</strong>
+                    </h1>
+                    <div class="sign-up-form">
+                        <form class="d-flex" [formGroup]="landingForm">
+                            <input type="text" name="" formControlName="email" name="email"
+                                placeholder="Enter your personal email" />
+                            <button type="submit" (click)="singup(landingForm.value)">Sign up now</button>
+                        </form>
+                    </div>
+                    <h4>{{header_bluepart.content_1}}</h4>
+                    <h4>{{header_bluepart.content_2}}</h4>
+                </div>
+                <div class="header-bluepart-r">
+                    <img src="{{API_URL + 'images/landing_page/' + header_bluepart.image}}" alt="" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="boxes-section">
+        <div class="container">
+            <ul class="d-flex four-box">
+                <li>
+                    <div class="boxes-section-div">
+                        <span><img src="{{API_URL + 'images/landing_page/' + signup_for_free.image}}" alt="" /></span>
+                        <h3>{{signup_for_free.heading_1}}</h3>
+                        <p>{{signup_for_free.content_1}}</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="boxes-section-div">
+                        <span><img src="{{API_URL + 'images/landing_page/' + receive_offers.image}}" alt="" /></span>
+                        <h3>{{receive_offers.heading_1}}</h3>
+                        <p>{{receive_offers.content_1}}</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="boxes-section-div">
+                        <span><img src="{{API_URL + 'images/landing_page/' + accept_offer.image}}" alt="" /></span>
+                        <h3>{{accept_offer.heading_1}}</h3>
+                        <p>{{accept_offer.content_1}}</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="boxes-section-div">
+                        <span><img src="{{API_URL + 'images/landing_page/' + join_company.image}}" alt="" /></span>
+                        <h3>{{join_company.heading_1}}</h3>
+                        <p>{{join_company.content_1}}</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="data-security">
+        <div class="container">
+            <div class="d-flex">
+                <div class="data-security-l">
+                    <h2 class="mobile-view">
+                        <strong>{{data_security.heading_1}}</strong>
+                    </h2>
+                    <img src="{{API_URL + 'images/landing_page/' + data_security.image}}" alt="" />
+                </div>
+                <div class="data-security-r">
+                    <h2 class="mobileview-none">
+                        <strong>{{data_security.heading_1}}</strong>
+                    </h2>
+                    <p>{{data_security.content_1}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="transparency">
+        <div class="container">
+            <div class="transparency-bg d-flex">
+                <h2><small>{{transparency.heading_1}}</small><strong> {{transparency.heading_2}}</strong></h2>
+                <p>{{transparency.content_1}} <br />
+                    {{transparency.content_2}} </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="support-identity">
+        <div class="container">
+            <div class="d-flex">
+                <div class="support-identity-l">
+                    <h2 class="mobile-view">
+                        <small>{{support_identity.heading_1}}</small>
+                        <strong>{{support_identity.heading_2}}</strong>
+                    </h2>
+                    <img src="{{API_URL + 'images/landing_page/' + support_identity.image}}" alt="" />
+                </div>
+                <div class="support-identity-r">
+                    <h2 class="mobileview-none">
+                        <small>{{support_identity.heading_1}}</small>
+                        <strong>{{support_identity.heading_2}}</strong>
+                    </h2>
+                    <p>{{support_identity.content_1}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="d-flex">
+            <div class="fotoer-logo">
+                <a href=""><img src="assets/img/email-logo.png" alt="" /></a>
+            </div>
+            <div class="quick-link">
+                <h3>Company </h3>
+                <a [routerLink]="['/aboutus']" target="_blank">About Us</a>
+                <a [routerLink]="['/termsandcondition']" target="_blank">Terms & Condition</a>
+                <a [routerLink]="['/privacypolicy']" target="_blank">Privacy policy</a>
+                <a [routerLink]="['/contactus']" target="_blank">Contact Us</a>
+            </div>
+            <div class="quick-link">
+                <h3>Quick Links</h3>
+                <a href="{{candidateURL}}" target="_blank">Candidate</a>
+                <a href="{{employerURL}}" target="_blank">Employer</a>
+            </div>
+            <div class="footer-media">
+                <h3>Find Us Online</h3>
+                <div class="d-flex">
+                    <a target="_blank" href="https://www.facebook.com/HireCommit/"><img src="assets/img/facebook.svg"
+                            alt="" /></a>
+                    <a target="_blank" href="https://twitter.com/hirecommit"><img src="assets/img/twitter.svg"
+                            alt="" /></a>
+                    <a target="_blank" href="https://www.linkedin.com/company/hirecommit/?viewAsMember=true"><img
+                            src="assets/img/linkedin.svg" alt="" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        <p>© Copyright <a [routerLink]="['/']">HireCommit</a> - 2019 All Rights Reserved.</p>
+    </div>
+</footer>

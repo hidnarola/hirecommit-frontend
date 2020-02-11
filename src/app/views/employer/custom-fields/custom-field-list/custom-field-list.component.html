@@ -1,0 +1,113 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header group-title-221">
+
+                    <i class="fa fa-info-circle icon-size" style="cursor: pointer;" (click)="open(content)"></i>
+                    <strong>Custom Fields</strong>
+                    <p class="pull-right"></p>
+
+
+                    <button *ngIf="userDetail.role === 'employer'"
+                        class="pull-right btn btn-sm btn-primary custom-margin"
+                        [routerLink]="['/employer/custom_fields/add']">
+                        <i class="icon-plus"></i>
+                        Add Custom Fields
+                    </button>
+
+                    <button *ngIf="userDetail.role === 'sub-employer'"
+                        class="pull-right btn btn-sm btn-primary custom-margin"
+                        [routerLink]="['/sub_employer/custom_fields/add']">
+                        <i class="icon-plus"></i>
+                        Add Custom Fields
+                    </button>
+                </div>
+
+                <!-- popup -->
+                <ng-template #content let-c="close" let-d="dismiss">
+                    <div class="modal-header instructions-popup-head">
+                        <h4 class="modal-title" id="modal-basic-title"><i class="icon-info"></i>
+                            Information</h4>
+                        <button type="button" id="closeBtn" class="close" aria-label="Close"
+                            (click)="d('Cross click')"><i class="fa fa-times"> </i></button>
+                    </div>
+                    <div class="modal-body instructions-popup-body">
+                        <h5>Custom Fields(Optional):</h5>
+                        <h6>{{msg}}
+                        </h6>
+
+                    </div>
+                </ng-template>
+                <!-- popup -->
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table"
+                        style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="background: none;">No.</th>
+                                <th>Custom Fields</th>
+
+                                <th *ngIf="userDetail.role ==='employer' || userDetail.role ==='sub-employer'">Action
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngIf="data?.length !=0">
+                            <tr *ngFor="let d of data; let i = index;">
+                                <!-- <td>{{d.serial_number}} </td> -->
+                                <td>{{ dataTablesParameters.start + i + 1 }}</td>
+                                <td>{{ d.key }}</td>
+
+                                <td *ngIf="userDetail.role === 'employer'">
+                                    <button tooltip='View' type="button" class="btn btn-sm btn-success"
+                                        [routerLink]="['/employer/custom_fields/view/',d._id]">
+                                        <i class="icon-eye"></i></button>
+
+                                    <button tooltip='Edit' type="button" class="btn btn-sm btn-primary"
+                                        [routerLink]="['/employer/custom_fields/edit/',d._id]">
+                                        <i class="icon-pencil"></i></button>
+
+                                    <button tooltip='Delete' type="button" class="btn btn-sm btn-danger"
+                                        (click)="delete(d._id)">
+                                        <i class="icon-trash"></i></button>
+                                </td>
+
+                                <td *ngIf="userDetail.role === 'sub-employer'">
+                                    <button tooltip='View' type="button" class="btn btn-sm btn-success"
+                                        [routerLink]="['/sub_employer/custom_fields/view/',d._id]">
+                                        <i class="icon-eye"></i></button>
+
+                                    <!-- <button *ngIf="adminRights" tooltip='Edit' type="button"
+                                        class="btn btn-sm btn-primary"
+                                        [routerLink]="['/sub_employer/custom_fields/edit/',d._id]">
+                                        <i class="icon-pencil"></i></button>
+
+                                    <button *ngIf="adminRights" tooltip='Delete' type="button"
+                                        class="btn btn-sm btn-danger" (click)="delete(d._id)">
+                                        <i class="icon-trash"></i></button> -->
+
+                                    <button tooltip='Edit' type="button" class="btn btn-sm btn-primary"
+                                        [routerLink]="['/sub_employer/custom_fields/edit/',d._id]">
+                                        <i class="icon-pencil"></i></button>
+
+                                    <button tooltip='Delete' type="button" class="btn btn-sm btn-danger"
+                                        (click)="delete(d._id)">
+                                        <i class="icon-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="data?.length == 0">
+                            <tr>
+                                <td colspan="8" class="no-data-available">Optional Setup. Click on Add Custom Fields to
+                                    add fields to your offers. Click on i for more information.
+                                </td>
+                            </tr>
+                        <tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

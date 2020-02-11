@@ -1,0 +1,74 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i>
+                    {{candidate_type}} Candidate
+                </div>
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover table"
+                        style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>Candidate Name</th>
+                                <th>Candidate Email</th>
+                                <th>Contact No </th>
+                                <th>ID Proof</th>
+                                <th>ID Proof Number</th>
+                                <th>Driving License State</th>
+                                <th style="width: 15%;">Date of Registration</th>
+                                <!-- <th>Status</th> -->
+                                <th style="width: 12%;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let data of candidates; let i = index;">
+                                <td>{{data.firstname}} {{data.lastname}}</td>
+                                <td>{{data.user.email}}</td>
+                                <td>{{data.countrycode}} {{data.contactno}}</td>
+                                <td>{{data['document'].name}}</td>
+                                <td>{{data.documentNumber}}</td>
+                                <td>{{data.drivingLicenseState ? data.drivingLicenseState : '-'}}</td>
+                                <!-- candidate_detail.createdAt | date: 'dd/MM/yyyy': 'utc' -->
+                                <td>{{data.createdAt | date: 'dd/MM/yyyy': 'utc'}}</td>
+                                <!-- <td>{{data.status}}</td> -->
+                                <td>
+                                    <button tooltip='View' type="button" *ngIf="candidate_type === 'Approved'"
+                                        class="btn btn-sm btn-success"
+                                        [routerLink]="['/admin/candidates/approved_candidate/view/',data._id]">
+                                        <i class="icon-eye"></i></button>
+
+                                    <button tooltip='View' type="button" *ngIf="candidate_type === 'New'"
+                                        class="btn btn-sm btn-success"
+                                        [routerLink]="['/admin/candidates/new_candidate/view/',data._id]">
+                                        <i class="icon-eye"></i></button>
+
+                                    <button *ngIf="candidate_type === 'New'" type="button" class="btn btn-sm btn-danger"
+                                        tooltip='Delete' (click)="onDelete(data.user_id)"><i
+                                            class="icon-trash"></i></button>
+
+                                    <button type="button" *ngIf="candidate_type === 'New'" tooltip='Approve'
+                                        class="btn btn-sm btn-primary" id="approve" (click)="onApproved(data.user_id)"
+                                        [disabled]="isApproved"><i class="icon-check"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tbody *ngIf="candidates?.length == 0">
+                            <tr *ngIf="candidate_type === 'Approved'">
+                                <td colspan="8" class="no-data-available">No Approved Candidate!</td>
+                            </tr>
+
+                            <tr *ngIf="candidate_type === 'New'">
+                                <td colspan="8" class="no-data-available">No New Candidate!</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
