@@ -61,6 +61,7 @@
               "extractCss": true,
               "namedChunks": false,
               "aot": true,
+              "deployUrl": "",
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
