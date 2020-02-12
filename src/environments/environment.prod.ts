@@ -19,5 +19,5 @@ export const environment = {
   imageUrl: 'https://hirecommit-api.herokuapp.com/upload/',
   employerURL: 'https://employer.hirecommit.com/',
   candidateURL: 'https://candidate.hirecommit.com/',
-  mainURL: 'https://hirecommit.com/'
+  mainURL: 'https://www.hirecommit.com/'
 };
