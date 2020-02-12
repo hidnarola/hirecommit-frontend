@@ -59,6 +59,7 @@ export class CandidateViewComponent implements OnInit {
       this.email = this.candidate_detail['user_id']['email'];
       this.documenttype = this.candidate_detail['documenttype']['name'];
       this.country = this.candidate_detail['country'].country;
+
       if (this.candidate_detail['documentimage'].length > 0) {
         this.documentImage = true;
 
@@ -82,10 +83,7 @@ export class CandidateViewComponent implements OnInit {
       this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
     });
   }
-  show() {
-    console.log('in on click=======>');
 
-  }
 
   approve(id) {
     document.getElementById('approve').setAttribute('disabled', 'true');

@@ -36,9 +36,9 @@
                             </label>
                             <div class="col-md-3">
                                 <input type="text" class="form-control" placeholder="Enter group name"
-                                    autocomplete="name" formControlName="name" [(ngModel)]="groupData.name" id="name">
-                                <div class="cust_err_msg" *ngIf="!groupForm.controls['name'].valid && isFormSubmitted"
+                                    autocomplete="name" formControlName="name" [(ngModel)]="groupData.name" id="name"
                                     (keyup)="isTouched($event)">
+                                <div class="cust_err_msg" *ngIf="!groupForm.controls['name'].valid && isFormSubmitted">
                                     <span
                                         *ngIf="groupForm.controls['name'].errors['required'] ||  groupForm.controls['name'].errors['whitespace']"
                                         class="text-danger">

@@ -175,7 +175,7 @@ export class SignUpComponent implements OnInit {
   }
 
   checkEmail() {
-    if (this.registerForm.value.email !== undefined &&  this.registerForm.value.email.length > 0) {
+    if (this.registerForm.value.email !== undefined && this.registerForm.value.email.length > 0) {
       this.service.check_employer_email({ 'email': this.registerForm.value.email }).subscribe(res => {
       }, (err) => {
         this.registerForm.controls['email'].setErrors({ 'isExist': true });
@@ -224,7 +224,8 @@ export class SignUpComponent implements OnInit {
           this.toastr.error(res['responseError'], 'Error!', { timeOut: 3000 });
           // this.formData.recaptcha = '';
         } else if (res['data'].status === 1) {
-
+          this.show_spinner = false;
+          this.is_submitted = false;
           this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
           Swal.fire({
             type: 'success',
@@ -250,7 +251,6 @@ export class SignUpComponent implements OnInit {
 
 
   getCode(e) {
-
     this.countryID = this.alldata.find(x => x._id === e.value);
     this.Business_Type = [];
     this.service.get_Type(this.countryID.country).subscribe(res => {

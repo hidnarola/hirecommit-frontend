@@ -336,6 +336,7 @@ export class RegisterComponent implements OnInit {
           this.show_spinner = false;
           this.toastr.error(res['responseError'], 'Error!', { timeOut: 3000 });
         } else if (res['status'] === 1) {
+          this.show_spinner = false;
           this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
           Swal.fire({
             type: 'success',

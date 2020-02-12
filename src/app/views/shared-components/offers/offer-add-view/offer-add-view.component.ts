@@ -553,11 +553,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
         }).then(res => {
           this.commonService.getuserdata.subscribe(res => {
-            console.log('in getuser=======>');
 
             this.response = res['offer'];
             this.formInit();
-            console.log('this.response=>', this.response);
 
             if (this.response === undefined
               || this.response.email === ''
@@ -566,7 +564,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             }
             if (this.response) {
               if (this.is_Add) {
-                console.log('IN ADD=======>');
 
                 this.form.controls['email'].setValue(res['offer'].email);
                 this.form.controls['candidate_name'].setValue(res['offer'].candidate_name);
@@ -584,8 +581,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                   this.form.controls['salarybracket_to'].setValue(res['offer'].salarybracket_to);
                 }
 
-                if (res['offer'].expirydate != null || res['offer'].joiningdate !== null) {
+                if (res['offer'].expirydate !== null) {
                   this.form.controls['expirydate'].setValue(new Date(res['offer'].expirydate));
+
+                }
+                if (res['offer'].joiningdate !== null) {
                   this.form.controls['joiningdate'].setValue(new Date(res['offer'].joiningdate));
                 }
                 if (res['offer'].offertype) {
@@ -595,13 +595,14 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 this.form.controls['notes'].setValue(res['offer'].notes);
 
                 // set group
-                // this.groupList();
-                this.service.get_groups().subscribe(resGrp => {
 
+                this.service.get_groups().subscribe(resGrp => {
                   if (resGrp[`data`].data) {
                     resGrp[`data`].data.forEach(element => {
                       this.group_optoins.push({ label: element.name, value: element._id });
                     });
+                  } else {
+                    this.groupList();
                   }
                 });
                 // console.log('this.group_optoins=>', this.group_optoins);
@@ -614,6 +615,8 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 if (groupName) {
                   this.form.controls.group.setValue(groupName.value);
                 }
+                this.groupDetail(res[`offer`].group);
+
                 this.form.controls['high_unopened'].setValue(res[`offer`].high_unopened);
                 this.form.controls['high_notreplied'].setValue(res[`offer`].high_notreplied);
                 this.form.controls['medium_unopened'].setValue(res[`offer`].medium_unopened);
@@ -682,7 +685,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 const current_date = moment();
                 this.d = moment(new Date(res[`offer`].expirydate));
                 setTimeout(() => {
-
+                  if (res[`offer`]['communicationFieldItems'] && res[`offer`]['communicationFieldItems'].length > 0) {
+                    this.isSetCommunication = true;
+                  }
                   this.form.controls['email'].setValue(res['offer'].email);
                   this.form.controls['candidate_name'].setValue(res['offer'].candidate_name);
                   if (res['offer'].title) {
@@ -732,13 +737,16 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                     this.form.controls.group.setValue(groupById.value);
                   }
 
+
                   // set communication
 
                   if (res[`offer`]['communicationFieldItems'] && res[`offer`]['communicationFieldItems'].length > 0) {
+
                     this.communicationData = res[`offer`]['communicationFieldItems'];
+                    this.isSetCommunication = true;
+
                     this.isAdHoc_ButtonShow = true;
                     this.updatecommunication();
-                    this.isSetCommunication = true;
                   } else {
                     this.isAdHoc_ButtonShow = false;
                     this.isSetCommunication = false;
@@ -873,158 +881,26 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                           }
                         }, 500);
                       }
-                      // set communication
-                      // this.isAccepted = false;
-                      if (res[`offer`]['communication'] && res[`offer`]['communication'].length > 0) {
+
+
+                      if (res[`offer`]['communicationFieldItems'] && res[`offer`]['communicationFieldItems'].length > 0) {
+
+                        this.communicationData = res[`offer`]['communicationFieldItems'];
                         this.isSetCommunication = true;
-                        this.communicationData = res[`offer`]['communication'];
-                        const _communication_array = [];
-                        let new_communication;
-                        this.communicationData.forEach((element, index) => {
-                          if (element.open !== undefined && element.reply !== undefined && element.reply_date !== undefined && element.open_date !== undefined && element.mail_send !== undefined) {
-                            new_communication = {
-                              'communicationname': element.communicationname,
-                              'trigger': element.trigger,
-                              'priority': element.priority,
-                              'day': element.day,
-                              'subject': element.subject,
-                              'message': element.message,
-                              '_id': element._id,
-                              'open': element.open,
-                              'reply': element.reply,
-                              'open_date': element.open_date,
-                              'reply_date': element.reply_date,
-                              'mail_send': element.mail_send
-                            };
-                          } else if (element.open !== undefined && element.reply !== undefined && element.open_date !== undefined && element.mail_send !== undefined) {
-
-                            new_communication = {
-                              'communicationname': element.communicationname,
-                              'trigger': element.trigger,
-                              'priority': element.priority,
-                              'day': element.day,
-                              'subject': element.subject,
-                              'message': element.message,
-                              '_id': element._id,
-                              'open': element.open,
-                              'reply': element.reply,
-                              'open_date': element.open_date,
-                              'mail_send': element.mail_send
-                            };
-                          } else if (element.open !== undefined && element.reply !== undefined && element.mail_send !== undefined) {
-                            new_communication = {
-                              'communicationname': element.communicationname,
-                              'trigger': element.trigger,
-                              'priority': element.priority,
-                              'day': element.day,
-                              'subject': element.subject,
-                              'message': element.message,
-                              '_id': element._id,
-                              'open': element.open,
-                              'reply': element.reply,
-                              'mail_send': element.mail_send
-                            };
-                          } else {
-                            new_communication = {
-                              'communicationname': element.communicationname,
-                              'trigger': element.trigger,
-                              'priority': element.priority,
-                              'day': element.day,
-                              'subject': element.subject,
-                              'message': element.message,
-                              '_id': element._id
-                            };
-                          }
-
-                          this.communicationFieldItems.setControl(index, this.fb.group({
-                            communicationname: ['', [Validators.required, this.noWhitespaceValidator]],
-                            trigger: ['', Validators.required],
-                            priority: ['', Validators.required],
-                            day: ['', Validators.required],
-                            subject: ['', [Validators.required, this.noWhitespaceValidator]],
-                            message: ['', [Validators.required, this.noWhitespaceValidator]]
-                          }));
-                          _communication_array.push(new_communication);
-                        });
-                        this.communicationData = _communication_array;
+                        this.isAdHoc_ButtonShow = true;
+                        this.updatecommunication();
                       } else {
+                        this.isAdHoc_ButtonShow = false;
                         this.isSetCommunication = false;
                       }
-                      // set communication
+                      // set adhoc
+                      if (res[`offer`]['AdHocCommunication'].length > 0) {
+                        this.AdHocCommunicationData = res[`offer`]['AdHocCommunication'];
+                        this.update_adhoc_communication(this.AdHocCommunicationData);
 
-                      // set AdHoc
-                      if (res[`offer`]['AdHoc'] && res[`offer`]['AdHoc'].length > 0) {
-                        this.AdHocCommunicationData = res[`offer`]['AdHoc'];
-                        const _Adhoc_communication_array = [];
-                        this.AdHocCommunicationData.forEach((element, index) => {
-                          let new_communication;
-                          if (element.AdHoc_open !== undefined && element.AdHoc_reply !== undefined && element.AdHoc_reply_date !== undefined && element.AdHoc_open_date !== undefined && element.AdHoc_mail_send !== undefined) {
-                            new_communication = {
-                              'AdHoc_communicationname': element.AdHoc_communicationname,
-                              'AdHoc_trigger': element.AdHoc_trigger,
-                              'AdHoc_priority': element.AdHoc_priority,
-                              'AdHoc_day': element.AdHoc_day,
-                              'AdHoc_subject': element.AdHoc_subject,
-                              'AdHoc_message': element.AdHoc_message,
-                              '_id': element._id,
-                              'AdHoc_open': element.AdHoc_open,
-                              'AdHoc_reply': element.AdHoc_reply,
-                              'AdHoc_open_date': element.AdHoc_open_date,
-                              'AdHoc_reply_date': element.AdHoc_reply_date,
-                              'AdHoc_mail_send': element.AdHoc_mail_send
-                            };
-                          } else if (element.AdHoc_open !== undefined && element.AdHoc_reply !== undefined && element.AdHoc_open_date !== undefined && element.AdHoc_mail_send !== undefined) {
-                            new_communication = {
-                              'AdHoc_communicationname': element.AdHoc_communicationname,
-                              'AdHoc_trigger': element.AdHoc_trigger,
-                              'AdHoc_priority': element.AdHoc_priority,
-                              'AdHoc_day': element.AdHoc_day,
-                              'AdHoc_subject': element.AdHoc_subject,
-                              'AdHoc_message': element.AdHoc_message,
-                              '_id': element._id,
-                              'AdHoc_open': element.AdHoc_open,
-                              'AdHoc_reply': element.AdHoc_reply,
-                              'AdHoc_open_date': element.AdHoc_open_date,
-                              'AdHoc_mail_send': element.AdHoc_mail_send
-                            };
-                          } else if (element.AdHoc_open !== undefined && element.AdHoc_reply !== undefined && element.AdHoc_mail_send !== undefined) {
-                            new_communication = {
-                              'AdHoc_communicationname': element.AdHoc_communicationname,
-                              'AdHoc_trigger': element.AdHoc_trigger,
-                              'AdHoc_priority': element.AdHoc_priority,
-                              'AdHoc_day': element.AdHoc_day,
-                              'AdHoc_subject': element.AdHoc_subject,
-                              'AdHoc_message': element.AdHoc_message,
-                              '_id': element._id,
-                              'AdHoc_open': element.AdHoc_open,
-                              'AdHoc_reply': element.AdHoc_reply,
-                              'AdHoc_mail_send': element.AdHoc_mail_send
-                            };
-                          } else {
-                            new_communication = {
-                              'AdHoc_communicationname': element.AdHoc_communicationname,
-                              'AdHoc_trigger': element.AdHoc_trigger,
-                              'AdHoc_priority': element.AdHoc_priority,
-                              'AdHoc_day': element.AdHoc_day,
-                              'AdHoc_subject': element.AdHoc_subject,
-                              'AdHoc_message': element.AdHoc_message,
-                              '_id': element._id
-                            };
-                          }
-                          this.AdHocCommunication.setControl(index, this.fb.group({
-                            AdHoc_communicationname: ['', [Validators.required, this.noWhitespaceValidator]],
-                            AdHoc_trigger: ['', Validators.required],
-                            AdHoc_priority: ['', Validators.required],
-                            AdHoc_day: ['', Validators.required],
-                            AdHoc_subject: ['', [Validators.required, this.noWhitespaceValidator]],
-                            AdHoc_message: ['', [Validators.required, this.noWhitespaceValidator]]
-                          }));
-
-                          _Adhoc_communication_array.push(new_communication);
-                        });
-                        this.AdHocCommunicationData = _Adhoc_communication_array;
                       }
                       // set AdHoc
+
                       this.form.controls['email'].setValue(res[`offer`].user_id.email);
                       this.form.controls['candidate_name'].setValue(
                         res[`candidate`]['data'].firstname + ' ' + res[`candidate`]['data'].lastname
@@ -1076,14 +952,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                         this.form.controls['salarybracket'].setValidators(null);
                         this.updateValidation();
                       }
-                      // if (res['data'].groups) {
-                      // this.form.controls['group'].setValue(res['groups']);
-                      // this.form.controls['high_unopened'].setValue(res.high_unopened);
-                      // this.form.controls['high_notreplied'].setValue(res[`data`].high_notreplied);
-                      // this.form.controls['medium_unopened'].setValue(res[`data`].medium_unopened);
-                      // this.form.controls['medium_notreplied'].setValue(res[`data`].medium_notreplied);
 
-                      // }
                       const _array = [];
                       const test = res[`offer`]['customfeild'];
                       this.service.get_customfield().subscribe(
@@ -2337,6 +2206,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
         } else if (this.istouchedArray.length == 0) {
           this.commonService.setuserData('');
+          this.router.navigate([this.cancel_link]);
         }
 
       }
@@ -2363,6 +2233,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
         } else if (this.istouchedArray.length == 0) {
           this.commonService.setuserData('');
+          this.router.navigate([this.cancel_link1]);
         }
 
       }
@@ -2636,7 +2507,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           accept: () => {
             this.service.update_offer(this.formData).subscribe(
               res => {
-                this.isRelaeased = true;
                 this.commonService.setuserData('');
                 this.socketService.changeOffer(this.grpId);
                 this.socketService.leaveGrp(this.grpId);
@@ -2644,9 +2514,12 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 this.socketService.changeOffer(res['data']['data'].employer_id);
                 this.socketService.leaveGrp(res['data']['data'].employer_id);
                 this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
+                // this.isRelaeased = true;
                 if (this.userDetail.role === 'employer') {
+                  this.isRelaeased = true;
                   this.router.navigate([this.cancel_link]);
                 } else if (this.userDetail.role === 'sub-employer') {
+                  this.isRelaeased = true;
                   this.router.navigate([this.cancel_link1]);
                 }
               },
@@ -2671,7 +2544,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               this.show_spinner = true;
               this.service.add_offer(this.formData).subscribe(
                 res => {
-                  this.isRelaeased = true;
                   this.commonService.setuserData('');
                   this.socketService.joinGrp(res['data']['data'].user_id);
                   this.socketService.changeOffer(res['data']['data'].user_id);
@@ -2681,8 +2553,10 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                   this.socketService.leaveGrp(res['data']['data'].employer_id);
                   this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
                   if (this.userDetail.role === 'employer') {
+                    this.isRelaeased = true;
                     this.router.navigate([this.cancel_link]);
                   } else if (this.userDetail.role === 'sub-employer') {
+                    this.isRelaeased = true;
                     this.router.navigate([this.cancel_link1]);
                   }
                 },
@@ -2744,10 +2618,17 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 ispopup: true
               };
 
-              this.router.navigate([this.currentUrl]);
-              this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-              this.commonService.setuserData(obj);
 
+              if (!this.isRelaeased) {
+
+                this.router.navigate([this.currentUrl]);
+                this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+                this.commonService.setuserData(obj);
+              } else {
+
+                this.commonService.setUnSavedData('');
+                this.commonService.setuserData('');
+              }
 
             } else if (this.istouchedArray.length == 0) {
               this.commonService.setuserData('');
@@ -2755,7 +2636,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           }
 
         } else if (this.is_Add) {
-          console.log('in add from destroy=======>');
 
           if (this.istouchedArray.length > 0) {
             if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
@@ -2767,11 +2647,8 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               offer: this.offer,
               ispopup: true
             };
-            console.log('this.isRelaeased=>', this.isRelaeased);
 
             if (!this.isRelaeased) {
-              console.log('in released condition=======>');
-
               this.router.navigate([this.currentUrl]);
               this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
               this.commonService.setuserData(obj);

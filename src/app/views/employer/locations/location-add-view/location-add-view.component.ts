@@ -31,6 +31,7 @@ export class LocationAddViewComponent implements OnInit {
   cnt1: any;
   cancel_link = '/employer/locations/list';
   is_Edit: boolean = false;
+  is_Add: boolean = false;
   is_View: boolean = false;
   show_spinner = false;
   userDetail: any;
@@ -45,6 +46,11 @@ export class LocationAddViewComponent implements OnInit {
   ) {
     this.currentUrl = this.router.url;
     this.userDetail = this.commonService.getLoggedUserDetail();
+
+    if (this.route.snapshot.data.title === 'Add') {
+      this.is_Add = true;
+      this.spinner.hide();
+    }
     this.forminit();
     if (this.route.snapshot.data.title !== 'Add') {
       this.route.params.subscribe((params: Params) => {
@@ -53,9 +59,11 @@ export class LocationAddViewComponent implements OnInit {
         this.spinner.hide();
       });
       if (this.route.snapshot.data.title === 'Add') {
-        this.spinner.hide();
+
+        this.is_Add = true;
+        // this.spinner.hide();
       }
-      if (this.route.snapshot.data.title === 'Edit') {
+      else if (this.route.snapshot.data.title === 'Edit') {
         this.is_Edit = true;
 
       } else {
@@ -242,17 +250,19 @@ export class LocationAddViewComponent implements OnInit {
       if (!(this.is_View)) {
         if (!this.isSubmit) {
           this.detail = this.addLocation.value;
+
           if (this.is_Edit) {
-            if (this.istouchedArray.length > 0) {
-              if (this.detail.city !== '' && this.detail.city !== undefined) {
-                this.commonService.setuserData(this.detail);
-                this.router.navigate([this.currentUrl]);
-                this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-              }
+            if (this.istouchedArray.length > 0 || (this.detail.city !== '' && this.detail.city !== undefined)) {
+              // if () {
+              this.commonService.setuserData(this.detail);
+              this.router.navigate([this.currentUrl]);
+              this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+              // }
             } else if (this.istouchedArray.length == 0) {
               this.commonService.setuserData('');
             }
-          } else {
+
+          } else if (this.is_Add) {
             if (this.detail.city !== '' && this.detail.city !== undefined) {
               this.commonService.setuserData(this.detail);
               this.router.navigate([this.currentUrl]);

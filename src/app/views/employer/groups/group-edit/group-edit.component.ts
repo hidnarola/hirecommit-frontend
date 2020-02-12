@@ -452,20 +452,21 @@ export class GroupEditComponent implements OnInit {
   ngOnDestroy(): void {
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.group = this.groupForm.value;
-      if (this.istouchedArray.length > 0) {
-        if (this.group.name !== '') {
-          if (!this.isNavigate) {
-            const obj = {
-              group: this.group,
-              communication: this.communicationData,
-              ispopup: true
-            };
-            this.router.navigate([this.currentUrl]);
-            this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-            this.commonService.setuserData(obj);
-          }
 
+      if (this.istouchedArray.length > 0 || this.group.name !== '') {
+        // if () {
+        if (!this.isNavigate) {
+          const obj = {
+            group: this.group,
+            communication: this.communicationData,
+            ispopup: true
+          };
+          this.router.navigate([this.currentUrl]);
+          this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+          this.commonService.setuserData(obj);
         }
+
+        // }
       } else if (this.istouchedArray.length == 0) {
         this.commonService.setuserData('');
       }

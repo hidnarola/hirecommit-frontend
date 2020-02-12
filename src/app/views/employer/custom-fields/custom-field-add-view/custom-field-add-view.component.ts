@@ -23,6 +23,7 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
   cf: any;
   data: any = {};
   isEdit = false;
+  isAdd = false;
   isView = false;
   show_spinner = false;
   userDetail: any;
@@ -43,7 +44,10 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.spinner.show();
-
+    if (this.route.snapshot.data.title === 'Add') {
+      this.panelTitle = 'Add Custom Field';
+      this.isAdd = true;
+    }
     if (this.route.snapshot.data.title !== 'Add') {
       this.route.params.subscribe((params: Params) => {
         this.id = params['id'];
@@ -128,6 +132,7 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
         // country: null,
       };
       this.panelTitle = 'Add Custom Field';
+
     }
   }
 
@@ -204,17 +209,17 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
       if (!this.isView) {
         this.data = this.addCustomFeild.value;
         if (this.isEdit) {
-          if (this.istouchedArray.length > 0) {
-            if (this.data.key) {
-              this.commonService.setuserData(this.data);
-              this.router.navigate([this.currentUrl]);
-              this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+          if (this.istouchedArray.length > 0 || this.data.key) {
+            // if (this.data.key) {
+            this.commonService.setuserData(this.data);
+            this.router.navigate([this.currentUrl]);
+            this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
 
-            }
+            // }
           } else if (this.istouchedArray.length == 0) {
             this.commonService.setuserData('');
           }
-        } else {
+        } else if (this.isAdd) {
           if (this.data.key) {
             this.commonService.setuserData(this.data);
             this.router.navigate([this.currentUrl]);

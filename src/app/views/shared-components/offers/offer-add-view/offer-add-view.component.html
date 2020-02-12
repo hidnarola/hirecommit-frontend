@@ -420,10 +420,11 @@
                                         {{customfield.key}}
                                     </label>
                                     <input type="text" formControlName="value" class="form-control"
-                                        placeholder="Enter value" id="value{{i}}" *ngIf="!isAccepted"
+                                        placeholder="Enter  {{customfield.key}}" id="value{{i}}" *ngIf="!isAccepted"
                                         (keyup)="isTouched($event)">
                                     <input type="text" formControlName="value" class="form-control"
-                                        placeholder="Enter value" id="value{{i}}" *ngIf="isAccepted" disabled>
+                                        placeholder="Enter {{customfield.key}}" id="value{{i}}" *ngIf="isAccepted"
+                                        disabled>
                                     <div class="cust_err_msg"
                                         *ngIf="form_validation && !form.controls['customfieldItem'].controls[i].controls['value'].valid">
                                         <span
@@ -1577,9 +1578,10 @@
 
                 </div>
                 <div class="card-footer text-right">
+                    {{isExpired}}
                     <button *ngIf="userDetail.role === 'candidate' && !isExpired" type="button"
                         class="btn btn-md btn-success" (click)="Accept(resData._id,resData.offertype)"
-                        [disabled]="resData.status === 'Accepted'|| show_spinner" id="accept ">
+                        [disabled]="resData.status === 'Accepted'|| show_spinner " id="accept ">
                         Accept <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
                     <button type="button" class="btn btn-md btn-primary" (click)='cancel()'>
                         Back</button>

@@ -363,21 +363,26 @@ export class SubAccountAddViewComponent implements OnInit {
       if (!this.is_View && !this.isSubmit) {
         this.detail = this.addAccount.value;
         if (this.is_Edit) {
-          if (this.istouchedArray.length > 0) {
-            if (this.detail.username || this.detail.email || this.detail.admin_rights !== false) {
-              this.commonService.setuserData(this.detail);
-              this.router.navigate([this.currentUrl]);
-              this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-            }
+          if (this.istouchedArray.length > 0 || (this.detail.username || this.detail.email || this.detail.admin_rights !== false)) {
+            // if () {
+            this.commonService.setuserData(this.detail);
+            this.router.navigate([this.currentUrl]);
+            this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+            // }
           } else if (this.istouchedArray.length == 0) {
             this.commonService.setuserData('');
           }
         } else {
-          if (this.detail.username || this.detail.email || this.detail.admin_rights !== false) {
+          if (this.istouchedArray.length > 0 || (this.detail.username || this.detail.email || this.detail.admin_rights !== false)) {
+            // if ) {
             this.commonService.setuserData(this.detail);
             this.router.navigate([this.currentUrl]);
             this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+            // }
+          } else if (this.istouchedArray.length === 0) {
+            this.commonService.setuserData('');
           }
+
         }
 
       }

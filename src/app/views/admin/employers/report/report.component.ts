@@ -69,9 +69,9 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
           if (res['status'] === 1) {
             this.offerData = res['offer'];
             this.offerData.forEach(element => {
-
               this.d = moment(new Date(element.expirydate));
-              if (this.d < new Date()) {
+              const current_date = moment();
+              if ((element.status === 'Released') && (this.d.isBefore(current_date, 'day'))) {
                 element.isExpired = true;
               } else {
                 element.isExpired = false;
@@ -142,8 +142,6 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onFrom(e) {
     const date = new Date(e);
-    console.log('e=>', date);
-
     this.StartToDate = date;
     const month = date.getMonth() + 1;
     this.from = date.getFullYear() + '-' + month + '-' + date.getDate();

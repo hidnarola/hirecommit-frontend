@@ -308,10 +308,19 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
               // To hide spinner
               this.spinner.hide();
               this.offerData = res['offer'];
-              this.offerData.forEach(element => {
+              // this.offerData.forEach(element => {
 
+              //   this.d = moment(new Date(element.expirydate));
+              //   if ((element.status === 'Released') && this.d < new Date()) {
+              //     element.isExpired = true;
+              //   } else {
+              //     element.isExpired = false;
+              //   }
+              // }
+              this.offerData.forEach(element => {
                 this.d = moment(new Date(element.expirydate));
-                if (this.d < new Date()) {
+                const current_date = moment();
+                if ((element.status === 'Released') && (this.d.isBefore(current_date, 'day'))) {
                   element.isExpired = true;
                 } else {
                   element.isExpired = false;
@@ -321,36 +330,36 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
               // if (this.offerData.status === 'Released' && this.offerData.expirydate > new Date()) {
               //   document.getElementById('accept').classList.add('d-0');
               // }
-              this.offerData.forEach((offer) => {
-                offer.isExpired = false;
-                const d = new Date();
-                // d.setDate(d.getDate() - 1);
+              // this.offerData.forEach((offer) => {
+              //   offer.isExpired = false;
+              //   const d = new Date();
+              //   // d.setDate(d.getDate() - 1);
 
-                if (offer.status && ((d > new Date(offer.expirydate) &&
-                  (Math.floor(d.getTime() / 86400000) !== Math.floor(new Date(offer.expirydate).getTime() / 86400000))))) {
-                  offer['isExpired'] = true;
-                } else {
-                  offer['isExpired'] = false;
-                }
+              //   if (offer.status && ((d > new Date(offer.expirydate) &&
+              //     (Math.floor(d.getTime() / 86400000) !== Math.floor(new Date(offer.expirydate).getTime() / 86400000))))) {
+              //     offer['isExpired'] = true;
+              //   } else {
+              //     offer['isExpired'] = false;
+              //   }
 
-                // this.salaryDuration = this.offerData.salaryduration;
-                // if (offer.salaryduration === null) {
-                //   offer.salaryduration = '-';
-                // } else {
-                //   offer.salaryduration;
-                // }
+              // this.salaryDuration = this.offerData.salaryduration;
+              // if (offer.salaryduration === null) {
+              //   offer.salaryduration = '-';
+              // } else {
+              //   offer.salaryduration;
+              // }
 
-                //  changed offer type valu to offer type label for display purpose only
-                // offer.offertype = (this.offer_type_optoins.find(o => o.value === offer.offertype).label);
+              //  changed offer type valu to offer type label for display purpose only
+              // offer.offertype = (this.offer_type_optoins.find(o => o.value === offer.offertype).label);
 
-                // if (offer['created_by'].length > 0) {
-                //   console.log('res sub emp=======>', offer['created_by'].username);
-                //   this.userName = offer['created_by'].username;
-                // } else {
-                //   console.log('res emp=>', offer[`employer_id`][`employer`].username);
-                //   this.userName = offer['employer_id']['employer'].username;
-                // }
-              });
+              // if (offer['created_by'].length > 0) {
+              //   console.log('res sub emp=======>', offer['created_by'].username);
+              //   this.userName = offer['created_by'].username;
+              // } else {
+              //   console.log('res emp=>', offer[`employer_id`][`employer`].username);
+              //   this.userName = offer['employer_id']['employer'].username;
+              // }
+              // });
 
               // if (this.offerData.length == 0) {
               //   var el = document.getElementById('DataTables_Table_0_paginate');

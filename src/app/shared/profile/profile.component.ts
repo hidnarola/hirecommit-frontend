@@ -201,18 +201,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.DocumentType = resp['documenttype'];
         this.DocumentNumber = resp['documentNumber'] ? resp['documentNumber'] : '-';
         this.DrivingLicenseState = resp['drivingLicenseState'];
-        console.log('resp[documentimage][0]=>', resp);
 
         if (resp['documentimage'][0] === undefined || resp['documentimage'][0] === 'undefined') {
-          console.log('in false=======>');
-
           this.isDoc = false;
         } else if (resp['documentimage'][0] != undefined || resp['documentimage'][0] !== 'undefined' || resp['documentimage'][0] !== 'string') {
-          console.log('in true=======>');
+
           this.isDoc = true;
           this.DocumentImage.push({
             source: `${this.image + resp['documentimage'][0]}`, thumbnail: `${this.image + resp['documentimage'][0]}`, title: 'Document'
-          });
+          })
         }
 
         // this.DocumentImage = ;
