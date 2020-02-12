@@ -23,7 +23,7 @@ export const environment = {
 
   // imageUrl: 'http://13.235.235.178:3000/upload/'
   imageUrl: 'https://hirecommit-api-staging.herokuapp.com/upload/',
-  employerURL: 'https://employer.tanubhasin.com/',
-  candidateURL: 'https://candidate.tanubhasin.com/',
-  mainURL: 'https://www.tanubhasin.com/'
+  employerURL: 'https://employer.hirecommit.com/',
+  candidateURL: 'https://candidate.hirecommit.com/',
+  mainURL: 'https://hirecommit.com/'
 };
