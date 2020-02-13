@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { GroupService } from '../manage-groups.service';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,7 @@ import { EmployerService } from '../../employer.service';
   templateUrl: './group-add.component.html',
   styleUrls: ['./group-add.component.scss']
 })
-export class GroupAddComponent implements OnInit {
+export class GroupAddComponent implements OnInit, OnDestroy {
   @ViewChild('editor') editorDir: NgxSummernoteDirective;
   @ViewChild('editor') summernote: ElementRef;
   public Editor = ClassicEditor;
@@ -32,6 +32,7 @@ export class GroupAddComponent implements OnInit {
   group_id: any;
   formData: FormData;
   show_spinner = false;
+  disabled = false;
   Priority_Options = [
     { label: 'Select Priority', value: '' },
     { label: 'High', value: 'High' },
@@ -62,7 +63,7 @@ export class GroupAddComponent implements OnInit {
   userDetail: any;
   cursorPos: any;
   days: any;
-  id: any
+  id: any;
   communication = false;
   currentUrl = '';
   constructor(
@@ -110,8 +111,8 @@ export class GroupAddComponent implements OnInit {
       if (res) {
         setTimeout(() => {
           this.groupData.name = res[`group`].name;
-          if (res[`communication`] !== '' && res[`group`] != '' && res[`group`].medium_notreplied !== ""
-            && res[`group`].medium_unopened !== "" && res[`group`].high_notreplied !== "" && res[`group`].high_unopened !== "") {
+          if (res[`communication`] !== '' && res[`group`] !== '' && res[`group`].medium_notreplied !== ''
+            && res[`group`].medium_unopened !== '' && res[`group`].high_notreplied !== '' && res[`group`].high_unopened !== '') {
             this.groupData.medium_notreplied = res[`group`].medium_notreplied;
             this.groupData.medium_unopened = res[`group`].medium_unopened;
             this.groupData.high_notreplied = res[`group`].high_notreplied;
@@ -206,6 +207,9 @@ export class GroupAddComponent implements OnInit {
         index = this.communicationData.length;
       }
     }
+    // if (data_index === 4) {
+    //   this.disabled = true;
+    // }
     const new_communication = {
       'communicationname': '',
       'trigger': '',

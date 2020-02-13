@@ -14,10 +14,7 @@ import { SocketService } from '../../../../services/socket.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalOptions } from '../../../../shared/modal_options';
 import * as moment from 'moment';
-import { AngularEditorConfig } from '@kolkov/angular-editor';
-import { environment } from '../../../../../environments/environment';
 import { NgxSummernoteDirective } from 'ngx-summernote';
-import { Observable, BehaviorSubject } from 'rxjs';
 
 declare const $: any;
 @Component({
@@ -192,7 +189,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
   ) {
 
     this.spinner.show();
-
     this.userDetail = this.commonService.getLoggedUserDetail();
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.getLocation();
@@ -520,6 +516,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
     this.userDetail = this.commonService.getLoggedUserDetail();
     // this.setGroupFormControl()
     //   To get candidates list
+    // this.spinner.show();
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.getCandidateList()
         .then(res => {
@@ -547,16 +544,15 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             this.is_View = true;
             this.getDetail(this.id);
           } else if (this.route.snapshot.data.title === 'Add') {
+            this.spinner.hide();
             this.is_Add = true;
             this.panelTitle = 'Add';
           }
 
         }).then(res => {
           this.commonService.getuserdata.subscribe(res => {
-
             this.response = res['offer'];
             this.formInit();
-
             if (this.response === undefined
               || this.response.email === ''
               || this.response === 'undefined') {
@@ -564,7 +560,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             }
             if (this.response) {
               if (this.is_Add) {
-
                 this.form.controls['email'].setValue(res['offer'].email);
                 this.form.controls['candidate_name'].setValue(res['offer'].candidate_name);
                 if (res['offer'].title) {
@@ -596,15 +591,15 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
                 // set group
 
-                this.service.get_groups().subscribe(resGrp => {
-                  if (resGrp[`data`].data) {
-                    resGrp[`data`].data.forEach(element => {
-                      this.group_optoins.push({ label: element.name, value: element._id });
-                    });
-                  } else {
-                    this.groupList();
-                  }
-                });
+                // this.service.get_groups().subscribe(resGrp => {
+                //   if (resGrp[`data`].data) {
+                //     resGrp[`data`].data.forEach(element => {
+                //       this.group_optoins.push({ label: element.name, value: element._id });
+                //     });
+                //   } else {
+                //     this.groupList();
+                //   }
+                // });
                 // console.log('this.group_optoins=>', this.group_optoins);
                 this.groupByID = res[`offer`].group;
                 // console.log('this.groupByID=>', this.groupByID);
@@ -677,11 +672,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             }
 
             this.getDetail(this.id).then((resp: any) => {
-              this.spinner.hide();
-
 
               if (res['offer'] && resp['offer']) {
-
+                this.spinner.hide();
                 const current_date = moment();
                 this.d = moment(new Date(res[`offer`].expirydate));
                 setTimeout(() => {
@@ -801,7 +794,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                     this.form.controls['acceptanceDate'].setValue('Date of Offer Acceptance');
                   }// this.form.controls['acceptanceDate'].setValue(res['data'].acceptedAt);
                   if (this.is_Edit) {
-
+                    this.spinner.hide();
                     setTimeout(() => {
                       const current_date = moment();
                       this.d = moment(new Date(res[`offer`].expirydate));
@@ -1389,6 +1382,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
   // getDetail
   async getDetail(id: string) {
+    this.spinner.show();
     id = this.id;
     if (id) {
       if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
@@ -2077,7 +2071,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
     }
     this.communicationData = array;
 
-    if (this.communicationData.length == 0) {
+    if (this.communicationData.length === 0) {
       this.isAdHoc_ButtonShow = false;
       this.is_Edit = false;
     } else {
@@ -2190,7 +2184,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       if (this.is_Add) {
         if (this.istouchedArray.length > 0) {
           if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
-            || this.offer.joiningdate == '') {
+            || this.offer.joiningdate === '') {
             this.offer.expirydate = null;
             this.offer.joiningdate = null;
           }
@@ -2204,7 +2198,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.cancel_link });
           this.commonService.setuserData(obj);
 
-        } else if (this.istouchedArray.length == 0) {
+        } else if (this.istouchedArray.length === 0) {
           this.commonService.setuserData('');
           this.router.navigate([this.cancel_link]);
         }
@@ -2217,7 +2211,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       } if (this.is_Add) {
         if (this.istouchedArray.length > 0) {
           if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
-            || this.offer.joiningdate == '') {
+            || this.offer.joiningdate === '') {
             this.offer.expirydate = null;
             this.offer.joiningdate = null;
           }
@@ -2231,7 +2225,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.cancel_link1 });
           this.commonService.setuserData(obj);
 
-        } else if (this.istouchedArray.length == 0) {
+        } else if (this.istouchedArray.length === 0) {
           this.commonService.setuserData('');
           this.router.navigate([this.cancel_link1]);
         }
@@ -2244,8 +2238,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
         this.router.navigate([this.cancel_link]);
       } else if (this.userDetail.role === 'sub-employer') {
         this.router.navigate([this.cancel_link1]);
-      }
-      else if (this.userDetail.role === 'candidate') {
+      } else if (this.userDetail.role === 'candidate') {
         this.router.navigate(['/candidate/offers/list']);
       } else if (this.userDetail.role === 'admin') {
         const backID = this.route.snapshot.params.report_id;
@@ -2609,7 +2602,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             || this.offer.salarytype != null || this.offer.location != null || this.offer.salarytype != null || this.offer.salarybracket != null || this.offer.salarybracket_from != null || this.offer.salarybracket_to != null || this.offer.salaryduration != null || this.offer.offertype != null || this.offer.group != null) {
             if (this.istouchedArray.length > 0) {
               // tslint:disable-next-line: max-line-length
-              if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null || this.offer.joiningdate == '') {
+              if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null || this.offer.joiningdate === '') {
                 this.offer.expirydate = null;
                 this.offer.joiningdate = null;
               }
@@ -2630,7 +2623,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 this.commonService.setuserData('');
               }
 
-            } else if (this.istouchedArray.length == 0) {
+            } else if (this.istouchedArray.length === 0) {
               this.commonService.setuserData('');
             }
           }
@@ -2639,7 +2632,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
           if (this.istouchedArray.length > 0) {
             if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
-              || this.offer.joiningdate == '') {
+              || this.offer.joiningdate === '') {
               this.offer.expirydate = null;
               this.offer.joiningdate = null;
             }
@@ -2656,9 +2649,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               this.commonService.setUnSavedData('');
               this.commonService.setuserData('');
             }
-
-
-          } else if (this.istouchedArray.length == 0) {
+          } else if (this.istouchedArray.length === 0) {
             this.commonService.setuserData('');
           }
 
