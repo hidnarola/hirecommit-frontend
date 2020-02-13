@@ -99,7 +99,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.Canididate_message = res['message'];
         }
       }, (err) => {
-        console.log('err=>', err);
+        // console.log('err=>', err);
         // this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
       });
     }
@@ -219,17 +219,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               }
               );
-              // this.d = moment(new Date(res[`offer`].expirydate));
-              // console.log('this.d < new Date()=>', res[`offer`].expirydate);
-              //
 
-
-              // console.log('document.getElementById(`offer-tr`)=>', document.getElementById('offer-tr'));
-
-              //
-
-              //
-              // }
               //  changed offer type valu to offer type label for display purpose only
               // this.offerData.forEach(offer => {
               //   offer.offertype = (this.offer_type_optoins
@@ -308,15 +298,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
               // To hide spinner
               this.spinner.hide();
               this.offerData = res['offer'];
-              // this.offerData.forEach(element => {
 
-              //   this.d = moment(new Date(element.expirydate));
-              //   if ((element.status === 'Released') && this.d < new Date()) {
-              //     element.isExpired = true;
-              //   } else {
-              //     element.isExpired = false;
-              //   }
-              // }
               this.offerData.forEach(element => {
                 this.d = moment(new Date(element.expirydate));
                 const current_date = moment();
@@ -327,20 +309,6 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               }
               );
-              // if (this.offerData.status === 'Released' && this.offerData.expirydate > new Date()) {
-              //   document.getElementById('accept').classList.add('d-0');
-              // }
-              // this.offerData.forEach((offer) => {
-              //   offer.isExpired = false;
-              //   const d = new Date();
-              //   // d.setDate(d.getDate() - 1);
-
-              //   if (offer.status && ((d > new Date(offer.expirydate) &&
-              //     (Math.floor(d.getTime() / 86400000) !== Math.floor(new Date(offer.expirydate).getTime() / 86400000))))) {
-              //     offer['isExpired'] = true;
-              //   } else {
-              //     offer['isExpired'] = false;
-              //   }
 
               // this.salaryDuration = this.offerData.salaryduration;
               // if (offer.salaryduration === null) {

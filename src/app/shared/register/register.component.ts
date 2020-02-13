@@ -329,7 +329,6 @@ export class RegisterComponent implements OnInit {
         this.formData.append('documentimage', this.fileFormData.get('filename'));
       }
       this.service.candidate_signup(this.formData).subscribe(res => {
-
         this.isFormSubmitted = false;
         // this.registerData = {};
         if (res['status'] === 0) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SubAccountService } from '../sub-accounts.service';
@@ -16,7 +16,7 @@ import { AuthService } from '../../../../services/auth/auth.service';
   templateUrl: './sub-account-add-view.component.html',
   styleUrls: ['./sub-account-add-view.component.scss']
 })
-export class SubAccountAddViewComponent implements OnInit {
+export class SubAccountAddViewComponent implements OnInit, OnDestroy {
   istouchedArray = [];
   addAccount: FormGroup;
   submitted = false;
@@ -31,7 +31,7 @@ export class SubAccountAddViewComponent implements OnInit {
   update_data_id: any;
   obj: any;
   userDetail: any;
-
+  is_Add: boolean = false;
   show_spinner = false;
   employerID: any;
   currentUrl = '';
@@ -59,25 +59,41 @@ export class SubAccountAddViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.spinner.show();
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
     });
     this.commonService.getuserdata.subscribe(res => {
       this.formInit();
       this.getDetail(this.id).then((resp: any) => {
-        if (res !== '') {
-          if (this.is_Edit) {
-            this.detail = { ...resp, ...res };
-          } else {
+        // if () {
+        if (this.is_Add) {
+          if (res !== '' && (resp === '' || resp === undefined)) {
+
+            this.spinner.hide();
             this.detail = { ...res };
           }
-        } else if (resp !== '' && (res._id == '' || res.username == '' || res.admin_rights == false || res.email == '')) {
-          this.detail = { ...resp };
         }
-        else if (!res && !resp) {
-          // this.formInit();
-          this.detail = '';
+        if (this.is_Edit) {
+          if ((resp !== '' || resp !== undefined) && (res.username == null || res.admin_rights == null || res.email == null)) {
+            this.spinner.hide();
+
+            this.detail = { ...resp };
+          } else if (res !== '' && resp !== '') {
+            this.spinner.hide();
+
+            this.detail = { ...resp, ...res };
+          } else {
+            this.spinner.hide();
+            this.detail = { ...res };
+          }
         }
+
+        // }
+        // else if (!res && !resp) {
+        //   // this.formInit();
+        //   this.detail = '';
+        // }
       });
     });
     // this.formInit();
@@ -85,9 +101,10 @@ export class SubAccountAddViewComponent implements OnInit {
 
 
     if (this.route.snapshot.data.title === 'Add') {
+      this.is_Add = true;
       this.panelTitle = 'Add';
       this.detail = '';
-    };
+    }
 
     if (this.route.snapshot.data.title !== 'Add') {
       this.route.params.subscribe((params: Params) => {
@@ -363,13 +380,14 @@ export class SubAccountAddViewComponent implements OnInit {
       if (!this.is_View && !this.isSubmit) {
         this.detail = this.addAccount.value;
         if (this.is_Edit) {
+
           if (this.istouchedArray.length > 0 || (this.detail.username || this.detail.email || this.detail.admin_rights !== false)) {
             // if () {
             this.commonService.setuserData(this.detail);
             this.router.navigate([this.currentUrl]);
             this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
             // }
-          } else if (this.istouchedArray.length == 0) {
+          } else if (this.istouchedArray.length === 0) {
             this.commonService.setuserData('');
           }
         } else {

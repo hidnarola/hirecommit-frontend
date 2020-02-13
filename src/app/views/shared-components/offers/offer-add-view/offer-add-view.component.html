@@ -1578,7 +1578,6 @@
 
                 </div>
                 <div class="card-footer text-right">
-                    {{isExpired}}
                     <button *ngIf="userDetail.role === 'candidate' && !isExpired" type="button"
                         class="btn btn-md btn-success" (click)="Accept(resData._id,resData.offertype)"
                         [disabled]="resData.status === 'Accepted'|| show_spinner " id="accept ">

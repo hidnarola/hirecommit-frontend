@@ -252,7 +252,7 @@ export class LocationAddViewComponent implements OnInit {
           this.detail = this.addLocation.value;
 
           if (this.is_Edit) {
-            if (this.istouchedArray.length > 0 || (this.detail.city !== '' && this.detail.city !== undefined)) {
+            if (this.istouchedArray.length > 0 || this.detail.city) {
               // if () {
               this.commonService.setuserData(this.detail);
               this.router.navigate([this.currentUrl]);
@@ -267,6 +267,8 @@ export class LocationAddViewComponent implements OnInit {
               this.commonService.setuserData(this.detail);
               this.router.navigate([this.currentUrl]);
               this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+            } else {
+              this.commonService.setuserData('');
             }
           }
 
