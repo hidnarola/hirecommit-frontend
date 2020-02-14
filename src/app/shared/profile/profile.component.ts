@@ -52,6 +52,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isStaging: Boolean = false;
   isDoc: Boolean = false;
   currentUrl = '';
+  imagee: any;
   constructor(
     private service: CommonService,
     private router: ActivatedRoute,
@@ -201,17 +202,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.DocumentType = resp['documenttype'];
         this.DocumentNumber = resp['documentNumber'] ? resp['documentNumber'] : '-';
         this.DrivingLicenseState = resp['drivingLicenseState'];
-
-        if (resp['documentimage'][0] === undefined || resp['documentimage'][0] === 'undefined') {
-          this.isDoc = false;
-        } else if (resp['documentimage'][0] != undefined || resp['documentimage'][0] !== 'undefined' || resp['documentimage'][0] !== 'string') {
-
-          this.isDoc = true;
-          this.DocumentImage.push({
-            source: `${this.image + resp['documentimage'][0]}`, thumbnail: `${this.image + resp['documentimage'][0]}`, title: 'Document'
-          })
+        if (resp['documentimage'][0]) {
+          this.commonService.candidate_image({ 'key': resp['documentimage'][0] }).subscribe((res: any) => {
+            if (resp['documentimage'][0] === undefined || resp['documentimage'][0] === 'undefined') {
+              this.isDoc = false;
+            } else if (resp['documentimage'][0] !== undefined || resp['documentimage'][0] !== 'undefined' || resp['documentimage'][0] !== 'string') {
+              this.isDoc = true;
+              this.DocumentImage.push({
+                source: `${res[`data`]}`, thumbnail: `${res[`data`]}`, title: 'Document'
+              })
+            }
+          });
         }
-
         // this.DocumentImage = ;
         this.Candidate_ContactNo = resp['contactno'];
         this.Candidate_CountryCode = resp['countrycode'];
@@ -223,6 +225,21 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
     }
 
+  }
+
+  convertImg(data) {
+    // 'ContentType',
+    // 'Metadata',
+    // 'Body'
+    console.log('im here=======>', data);
+
+    const blob = new Blob(data.Body.data, { type: data.ContentType });
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.imagee = event.target.result;
+      console.log('result=>', event.target.result);
+    };
+    reader.readAsDataURL(blob);
   }
 
   async getEmploterData() {

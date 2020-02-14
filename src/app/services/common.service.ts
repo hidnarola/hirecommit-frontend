@@ -88,6 +88,9 @@ export class CommonService {
   change_password(data): Observable<any[]> {
     return this.http.put<any[]>(`${this.url}` + 'change_password', data);
   }
+  candidate_image(data): Observable<any[]> {
+    return this.http.post<any[]>(`${this.url}` + 'candidate_image', data);
+  }
 
   //  To get country data
   country_data(id = 0): Observable<any[]> {

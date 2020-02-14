@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { environment } from '../../../../../environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
 import { LightboxModule } from 'primeng/lightbox';
 @Component({
   selector: 'app-candidate-view',
@@ -28,7 +29,7 @@ export class CandidateViewComponent implements OnInit {
   buttonValue1: any;
   documenttype: any;
   documentImage = false;
-  docImages: any[];
+  docImages: any;
   show_spinner = false;
   constructor(
     private router: Router,
@@ -38,7 +39,8 @@ export class CandidateViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private _sanitizer: DomSanitizer
 
   ) {
     this.userDetail = this.commonService.getLoggedUserDetail();
@@ -60,12 +62,24 @@ export class CandidateViewComponent implements OnInit {
       this.documenttype = this.candidate_detail['documenttype']['name'];
       this.country = this.candidate_detail['country'].country;
 
-      if (this.candidate_detail['documentimage'].length > 0) {
-        this.documentImage = true;
-
-        this.docImages.push({
-          source: `${this.image + this.candidate_detail['documentimage']}`, thumbnail: `${this.image + this.candidate_detail['documentimage']}`, title: 'Document'
+      if (res[`data`]['documentimage'][0]) {
+        this.commonService.candidate_image({ 'key': res[`data`]['documentimage'][0] }).subscribe((resp: any) => {
+          if (res[`data`]['documentimage'][0] === undefined || res[`data`]['documentimage'][0] === 'undefined') {
+            this.documentImage = false;
+          } else if (res[`data`]['documentimage'][0] !== undefined || res[`data`]['documentimage'][0] !== 'undefined'
+            || res['documentimage'][0] !== 'string') {
+            this.documentImage = true;
+            this.docImages.push({
+              source: `${resp[`data`]}`, thumbnail: `${resp[`data`]}`, title: 'Document'
+            });
+          }
         });
+
+        //   this.documentImage = true;
+
+        //   this.docImages.push({
+        //     source: `${this.image + this.candidate_detail['documentimage']}`, thumbnail: `${this.image + this.candidate_detail['documentimage']}`, title: 'Document'
+        //   });
 
 
       } else if (this.candidate_detail['documentimage'].length === 0) {
