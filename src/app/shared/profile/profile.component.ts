@@ -52,6 +52,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   isStaging: Boolean = false;
   isDoc: Boolean = false;
   currentUrl = '';
+  imagee: any;
   constructor(
     private service: CommonService,
     private router: ActivatedRoute,
@@ -173,7 +174,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       //   this.emp_data = res;
       //   this.candidateForm();
-      this.getCandidate().then((resp: any) => {
+      this.getCandidate().then(async (resp: any) => {
         //     console.log('resp=>', resp);
 
         //     setTimeout(() => {
@@ -201,17 +202,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.DocumentType = resp['documenttype'];
         this.DocumentNumber = resp['documentNumber'] ? resp['documentNumber'] : '-';
         this.DrivingLicenseState = resp['drivingLicenseState'];
-
-        if (resp['documentimage'][0] === undefined || resp['documentimage'][0] === 'undefined') {
-          this.isDoc = false;
-        } else if (resp['documentimage'][0] != undefined || resp['documentimage'][0] !== 'undefined' || resp['documentimage'][0] !== 'string') {
-
+        if (resp['documentimage'][0]) {
           this.isDoc = true;
+          const dc = this.image + resp['docimage'];
           this.DocumentImage.push({
-            source: `${this.image + resp['documentimage'][0]}`, thumbnail: `${this.image + resp['documentimage'][0]}`, title: 'Document'
-          })
+            source: `${dc}`, thumbnail: `${dc}`, title: resp['documenttype']
+          });
+        } else {
+          this.isDoc = false;
         }
-
         // this.DocumentImage = ;
         this.Candidate_ContactNo = resp['contactno'];
         this.Candidate_CountryCode = resp['countrycode'];
@@ -223,6 +222,30 @@ export class ProfileComponent implements OnInit, OnDestroy {
       });
     }
 
+  }
+  async blobToBlobURL(blob) {
+    return new Promise((ok, x) => {
+      window.URL = window.URL || window.webkitURL;
+      const blobUrl = window.URL.createObjectURL(blob);
+      ok(blobUrl);
+    });
+  }
+
+  async convertImg(data) {
+    // 'ContentType',
+    // 'Metadata',
+    // 'Body'
+    console.log('im here=======>', data);
+
+    const blob = new Blob(data.blob, { type: data.type });
+
+    return new Promise((ok, x) => {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        ok(event.target.result);
+      };
+      reader.readAsDataURL(blob);
+    });
   }
 
   async getEmploterData() {
@@ -240,7 +263,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async getCandidate() {
     return new Promise((pass, fail) => {
       this.candidateService.get_Profile_Candidate(this.id).subscribe(res => {
-
         pass(res[`data`]);
       }, err => {
         fail(err);

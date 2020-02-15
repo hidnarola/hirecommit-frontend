@@ -6,6 +6,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { environment } from '../../../../../environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
 import { LightboxModule } from 'primeng/lightbox';
 @Component({
   selector: 'app-candidate-view',
@@ -28,7 +29,8 @@ export class CandidateViewComponent implements OnInit {
   buttonValue1: any;
   documenttype: any;
   documentImage = false;
-  docImages: any[];
+  docImages: any;
+  DocumentSanitizer: any;
   show_spinner = false;
   constructor(
     private router: Router,
@@ -38,7 +40,8 @@ export class CandidateViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private spinner: NgxSpinnerService,
     private toastr: ToastrService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private _sanitizer: DomSanitizer
 
   ) {
     this.userDetail = this.commonService.getLoggedUserDetail();
@@ -60,15 +63,16 @@ export class CandidateViewComponent implements OnInit {
       this.documenttype = this.candidate_detail['documenttype']['name'];
       this.country = this.candidate_detail['country'].country;
 
-      if (this.candidate_detail['documentimage'].length > 0) {
+      if (res[`data`]['documentimage'][0]) {
         this.documentImage = true;
 
+        const dc = this.image + res[`data`]['docimage'];
+
         this.docImages.push({
-          source: `${this.image + this.candidate_detail['documentimage']}`, thumbnail: `${this.image + this.candidate_detail['documentimage']}`, title: 'Document'
+          source: `${dc}`, thumbnail: `${dc}`, title: this.candidate_detail['documenttype']['name']
         });
 
-
-      } else if (this.candidate_detail['documentimage'].length === 0) {
+      } else {
         this.documentImage = false;
       }
       // if (this.candidate_detail.user_id.isAllow === false) {
@@ -108,6 +112,14 @@ export class CandidateViewComponent implements OnInit {
         document.getElementById('approve').removeAttribute('disabled');
       }
     });
+  }
+
+  async blobToBlobURL(blob) {
+    console.log(' : hiii ==> ');
+    window.URL = window.URL || window.webkitURL;
+    const blobUrl = window.URL.createObjectURL(blob);
+    console.log(' blobUrl:  ==> ', blobUrl);
+    return blobUrl;
   }
 
   unapprove() {

@@ -16,7 +16,7 @@ export const environment = {
     staging: true,
     API_URL: 'https://hirecommit-api-staging.herokuapp.com/',
     captcha_site_key: '6Lem7ccUAAAAABRIlRSa6Nil1yC9m-uLVZTEdR3g',
-    imageUrl: 'https://hirecommit-api-staging.herokuapp.com/upload/',
+    imageUrl: 'https://hirecommit-api-staging.herokuapp.com/candidate_image?key=',
     employerURL: 'https://employer.tanubhasin.com/',
     candidateURL: 'https://candidate.tanubhasin.com/',
     mainURL: 'https://www.tanubhasin.com/'

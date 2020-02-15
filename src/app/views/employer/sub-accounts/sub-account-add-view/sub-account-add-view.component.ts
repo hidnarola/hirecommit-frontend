@@ -115,12 +115,14 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
         if (this.route.snapshot.data.title === 'Edit') {
           this.is_Edit = true;
         } else {
+          this.spinner.hide();
           this.is_View = true;
         }
       } else if (this.userDetail.role === 'admin') {
         if (this.route.snapshot.data.title === 'Sub - Account Edit') {
           this.is_Edit = true;
         } else {
+          this.spinner.hide();
           this.is_View = true;
           this.getDetail(this.id);
         }

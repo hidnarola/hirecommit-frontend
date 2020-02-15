@@ -49,10 +49,9 @@
 
 
                                     <p-lightbox [images]="docImages"></p-lightbox>
-
-                                    <!-- <img src="{{image + candidate_detail.documentimage}}"
-                                        style="width:70px; height: 50px;" (onClick)="show()" /> -->
-                                </td>
+                                    <!--
+                                    <img [src]="'http://192.168.100.11:3000/candidate_image?key=' + candidate_detail.documentimage[0]"
+                                        style="width:70px; height: 50px;" /> -->
                                 <td *ngIf="!documentImage">
                                     -
                                 </td>
