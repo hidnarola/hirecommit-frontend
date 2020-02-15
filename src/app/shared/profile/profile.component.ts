@@ -174,7 +174,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
       //   this.emp_data = res;
       //   this.candidateForm();
-      this.getCandidate().then((resp: any) => {
+      this.getCandidate().then(async (resp: any) => {
         //     console.log('resp=>', resp);
 
         //     setTimeout(() => {
@@ -203,16 +203,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.DocumentNumber = resp['documentNumber'] ? resp['documentNumber'] : '-';
         this.DrivingLicenseState = resp['drivingLicenseState'];
         if (resp['documentimage'][0]) {
-          this.commonService.candidate_image({ 'key': resp['documentimage'][0] }).subscribe((res: any) => {
-            if (resp['documentimage'][0] === undefined || resp['documentimage'][0] === 'undefined') {
-              this.isDoc = false;
-            } else if (resp['documentimage'][0] !== undefined || resp['documentimage'][0] !== 'undefined' || resp['documentimage'][0] !== 'string') {
-              this.isDoc = true;
-              this.DocumentImage.push({
-                source: `${res[`data`]}`, thumbnail: `${res[`data`]}`, title: 'Document'
-              })
-            }
+          this.isDoc = true;
+          const dc = this.image + resp['docimage'];
+          this.DocumentImage.push({
+            source: `${dc}`, thumbnail: `${dc}`, title: resp['documenttype']
           });
+        } else {
+          this.isDoc = false;
         }
         // this.DocumentImage = ;
         this.Candidate_ContactNo = resp['contactno'];
@@ -226,20 +223,29 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
   }
+  async blobToBlobURL(blob) {
+    return new Promise((ok, x) => {
+      window.URL = window.URL || window.webkitURL;
+      const blobUrl = window.URL.createObjectURL(blob);
+      ok(blobUrl);
+    });
+  }
 
-  convertImg(data) {
+  async convertImg(data) {
     // 'ContentType',
     // 'Metadata',
     // 'Body'
     console.log('im here=======>', data);
 
-    const blob = new Blob(data.Body.data, { type: data.ContentType });
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      this.imagee = event.target.result;
-      console.log('result=>', event.target.result);
-    };
-    reader.readAsDataURL(blob);
+    const blob = new Blob(data.blob, { type: data.type });
+
+    return new Promise((ok, x) => {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        ok(event.target.result);
+      };
+      reader.readAsDataURL(blob);
+    });
   }
 
   async getEmploterData() {
@@ -257,7 +263,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async getCandidate() {
     return new Promise((pass, fail) => {
       this.candidateService.get_Profile_Candidate(this.id).subscribe(res => {
-
         pass(res[`data`]);
       }, err => {
         fail(err);

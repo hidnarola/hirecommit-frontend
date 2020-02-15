@@ -27,7 +27,7 @@ export const environment = {
   // API_URL: 'localhost:3000/',
   // imageUrl: str + host + ':' + port + '/upload/'
   // imageUrl: ' http://13.235.235.178' + '/upload/'
-  imageUrl: 'http://192.168.100.11:3000' + '/upload/',
+  imageUrl: 'http://192.168.100.11:3000/candidate_image?key=',
   employerURL: 'http://localhost:4200/',
   candidateURL: 'http://localhost:4200/',
   mainURL: 'http://localhost:4200/'

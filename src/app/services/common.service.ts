@@ -89,7 +89,12 @@ export class CommonService {
     return this.http.put<any[]>(`${this.url}` + 'change_password', data);
   }
   candidate_image(data): Observable<any[]> {
-    return this.http.post<any[]>(`${this.url}` + 'candidate_image', data);
+    // const token = localStorage.getItem('token');
+
+    // // decode the token to get its payload
+    // let token12 = jwt_decode(token);
+    return this.http.get<any[]>(`${this.url}` + 'candidate_image' + `?key=${encodeURIComponent(data)}`,
+      {});
   }
 
   //  To get country data

@@ -30,6 +30,7 @@ export class CandidateViewComponent implements OnInit {
   documenttype: any;
   documentImage = false;
   docImages: any;
+  DocumentSanitizer: any;
   show_spinner = false;
   constructor(
     private router: Router,
@@ -63,26 +64,15 @@ export class CandidateViewComponent implements OnInit {
       this.country = this.candidate_detail['country'].country;
 
       if (res[`data`]['documentimage'][0]) {
-        this.commonService.candidate_image({ 'key': res[`data`]['documentimage'][0] }).subscribe((resp: any) => {
-          if (res[`data`]['documentimage'][0] === undefined || res[`data`]['documentimage'][0] === 'undefined') {
-            this.documentImage = false;
-          } else if (res[`data`]['documentimage'][0] !== undefined || res[`data`]['documentimage'][0] !== 'undefined'
-            || res['documentimage'][0] !== 'string') {
-            this.documentImage = true;
-            this.docImages.push({
-              source: `${resp[`data`]}`, thumbnail: `${resp[`data`]}`, title: 'Document'
-            });
-          }
+        this.documentImage = true;
+
+        const dc = this.image + res[`data`]['docimage'];
+
+        this.docImages.push({
+          source: `${dc}`, thumbnail: `${dc}`, title: this.candidate_detail['documenttype']['name']
         });
 
-        //   this.documentImage = true;
-
-        //   this.docImages.push({
-        //     source: `${this.image + this.candidate_detail['documentimage']}`, thumbnail: `${this.image + this.candidate_detail['documentimage']}`, title: 'Document'
-        //   });
-
-
-      } else if (this.candidate_detail['documentimage'].length === 0) {
+      } else {
         this.documentImage = false;
       }
       // if (this.candidate_detail.user_id.isAllow === false) {
@@ -122,6 +112,14 @@ export class CandidateViewComponent implements OnInit {
         document.getElementById('approve').removeAttribute('disabled');
       }
     });
+  }
+
+  async blobToBlobURL(blob) {
+    console.log(' : hiii ==> ');
+    window.URL = window.URL || window.webkitURL;
+    const blobUrl = window.URL.createObjectURL(blob);
+    console.log(' blobUrl:  ==> ', blobUrl);
+    return blobUrl;
   }
 
   unapprove() {
