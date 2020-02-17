@@ -31,7 +31,6 @@ export class RoleGuardService implements CanActivate {
         if (this.redirect) {
           this.router.navigate([res.newurl]);
         }
-
         if (!this.redirect) {
           this.confirmationService.confirm({
             message: 'Are you sure you want to leave this page?',
