@@ -5,6 +5,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as  moment from 'moment';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-timeline',
@@ -22,9 +23,10 @@ export class TimelineComponent implements OnInit {
   constructor(private service: OfferService,
     private route: ActivatedRoute,
     private commonservice: CommonService,
+    private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private router: Router) {
-
+    this.spinner.show();
     this.userDetail = this.commonservice.getLoggedUserDetail();
   }
 
@@ -35,11 +37,13 @@ export class TimelineComponent implements OnInit {
     });
 
     this.service.history(this.id).subscribe(res => {
+      this.spinner.hide();
       const history = res['data'];
       this.history = history;
       this.candidate = history['candidate'];
       this.employer = history['employer'];
     }, (err) => {
+      this.spinner.hide();
       this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
     });
 

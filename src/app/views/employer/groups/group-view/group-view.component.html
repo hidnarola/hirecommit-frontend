@@ -156,7 +156,7 @@
                                             </ckeditor> -->
                                             <div>
                                                 <div [ngxSummernote]="config" #editor
-                                                    [(summernoteModel)]="communication.message" id="editor" disabled>
+                                                    [(ngModel)]="communication.message" id="editor" disabled>
                                                 </div>
                                             </div>
                                         </div>
