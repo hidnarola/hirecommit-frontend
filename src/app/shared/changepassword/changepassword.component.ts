@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms'
 import { CommonService } from '../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-changepassword',
@@ -31,8 +32,10 @@ export class ChangepasswordComponent implements OnInit, OnDestroy {
     public service: CommonService,
     private toastr: ToastrService,
     private commonService: CommonService,
+    private spinner: NgxSpinnerService,
     private confirmationService: ConfirmationService,
   ) {
+    this.spinner.hide();
     this.formData = {};
     this.currentUrl = this.router.url;
     this.forminit();

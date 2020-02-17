@@ -74,6 +74,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
     private modalService: NgbModal,
     private toastr: ToastrService
   ) {
+    // this.spinner.show();
     this.userDetail = this.commonService.getLoggedUserDetail();
     if (this.userDetail.role === 'employer') {
       //   this.empService.check_approved(this.userDetail.id).subscribe(res => {
@@ -108,7 +109,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.getCustomField();
     }
     // To show spinner
-    this.spinner.show();
+    // this.spinner.show();
   }
 
   // get first custom field
@@ -207,7 +208,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.service.view_offer(dataTablesParameters).subscribe(res => {
             if (res['status']) {
               // To hide spinner
-              this.spinner.hide();
+              // this.spinner.hide();
               this.offerData = res['offer'];
               this.offerData.forEach(element => {
                 this.d = moment(new Date(element.expirydate));
@@ -240,7 +241,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }, err => {
             // To hide spinner
-            this.spinner.hide();
+            // this.spinner.hide();
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         },
@@ -296,7 +297,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
           this.service.view_offer_candidate(dataTablesParameters).subscribe(res => {
             if (res['status']) {
               // To hide spinner
-              this.spinner.hide();
+              // this.spinner.hide();
               this.offerData = res['offer'];
 
               this.offerData.forEach(element => {
@@ -341,7 +342,7 @@ export class OfferListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           }, err => {
             // To hide spinner
-            this.spinner.hide();
+            // this.spinner.hide();
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         },

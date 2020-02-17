@@ -48,6 +48,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
     private employerService: EmployerService,
     private location: Location
   ) {
+    this.spinner.show();
     this.userDetail = this.commonService.getLoggedUserDetail();
     this.employerID = this.route.snapshot.params['eid'];
     this.currentUrl = this.router.url;
@@ -59,7 +60,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.spinner.show();
+    // this.spinner.show();
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
     });
@@ -69,7 +70,6 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
         // if () {
         if (this.is_Add) {
           if (res !== '' && (resp === '' || resp === undefined)) {
-
             this.spinner.hide();
             this.detail = { ...res };
           }
@@ -115,14 +115,12 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
         if (this.route.snapshot.data.title === 'Edit') {
           this.is_Edit = true;
         } else {
-          this.spinner.hide();
           this.is_View = true;
         }
       } else if (this.userDetail.role === 'admin') {
         if (this.route.snapshot.data.title === 'Sub - Account Edit') {
           this.is_Edit = true;
         } else {
-          this.spinner.hide();
           this.is_View = true;
           this.getDetail(this.id);
         }
@@ -155,6 +153,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
         this.panelTitle = 'Edit';
         return new Promise((pass, fail) => {
           this.service.view_sub_acc_detail(id).subscribe(res => {
+            this.spinner.hide();
             if (res['data']['user_id']['admin_rights'] === 'no') {
               this.detail = {
                 username: res['data']['username'],
@@ -177,6 +176,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
             pass(this.detail);
           }, (err) => {
             fail(err);
+            this.spinner.hide();
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         });
@@ -184,6 +184,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
         // this.panelTitle = 'Edit';
         return new Promise((pass, fail) => {
           this.employerService.get_details_sub_employer(id).subscribe(res => {
+            this.spinner.hide();
             if (res['data']['user_id']['admin_rights'] === 'no') {
               this.detail = {
                 username: res['data']['username'],

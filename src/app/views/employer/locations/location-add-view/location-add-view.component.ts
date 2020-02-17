@@ -44,6 +44,7 @@ export class LocationAddViewComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private confirmationService: ConfirmationService,
   ) {
+    this.spinner.show();
     this.currentUrl = this.router.url;
     this.userDetail = this.commonService.getLoggedUserDetail();
 
@@ -56,10 +57,9 @@ export class LocationAddViewComponent implements OnInit {
       this.route.params.subscribe((params: Params) => {
         this.id = params['id'];
         this.getDetail(this.id);
-        this.spinner.hide();
+        // this.spinner.hide();
       });
       if (this.route.snapshot.data.title === 'Add') {
-
         this.is_Add = true;
         // this.spinner.hide();
       }
@@ -91,6 +91,7 @@ export class LocationAddViewComponent implements OnInit {
         if (res.city) {
           this.spinner.hide();
           if (this.is_Edit) {
+            this.spinner.hide();
             this.detail = { ...resp, ...res };
           } else {
             this.detail = { ...res };
@@ -155,6 +156,7 @@ export class LocationAddViewComponent implements OnInit {
           pass(res['data']['data']);
         }, (err) => {
           fail(err);
+          this.spinner.hide();
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         });
       })

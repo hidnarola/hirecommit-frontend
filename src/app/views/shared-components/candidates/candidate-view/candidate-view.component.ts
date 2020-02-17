@@ -44,6 +44,7 @@ export class CandidateViewComponent implements OnInit {
     private _sanitizer: DomSanitizer
 
   ) {
+    this.spinner.show();
     this.userDetail = this.commonService.getLoggedUserDetail();
     if (this.activatedRoute.snapshot.data.type === 'new') {
       this.candidate_type = 'New';
@@ -58,6 +59,7 @@ export class CandidateViewComponent implements OnInit {
 
   ngOnInit() {
     this.service.get_candidate_Detail(this.id).subscribe(res => {
+      this.spinner.hide();
       this.candidate_detail = res['data'];
       this.email = this.candidate_detail['user_id']['email'];
       this.documenttype = this.candidate_detail['documenttype']['name'];
@@ -83,7 +85,7 @@ export class CandidateViewComponent implements OnInit {
       // }
       // console.log(this.candidate_detail, this.email);
     }, (err) => {
-      console.log(err);
+      this.spinner.hide;
       this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
     });
   }

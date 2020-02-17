@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployerService } from '../../employer.service';
 import { CommonService } from '../../../../services/common.service';
 import { EmployerService as emp } from '../../../admin/employers/employer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-sub-accounts-list',
   templateUrl: './sub-accounts-list.component.html',
@@ -36,12 +37,13 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
     private confirmationService: ConfirmationService,
     private toastr: ToastrService,
     private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
     private EmpService: EmployerService,
     private commonService: CommonService,
     private employer_admin_Service: emp,
     private route: ActivatedRoute,
   ) {
-
+    // this.spinner.show();
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
     });
@@ -67,8 +69,8 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
         destroy: true,
         ajax: (dataTablesParameters: any, callback) => {
           this.service.view_sub_account(dataTablesParameters).subscribe(res => {
-
             if (res['status']) {
+              this.spinner.hide();
               this.data = res['user'];
               this.subAccountList = [];
               this.data.forEach(element => {
@@ -132,8 +134,8 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
         ajax: (dataTablesParameters: any, callback) => {
           dataTablesParameters['id'] = this.id;
           this.employer_admin_Service.get_sub_employers(dataTablesParameters).subscribe(res => {
-
             if (res['status']) {
+              // this.spinner.hide();
               this.data = res['user'];
               this.subAccountList = [];
               this.data.forEach(element => {

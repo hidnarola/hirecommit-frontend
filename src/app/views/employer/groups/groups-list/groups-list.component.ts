@@ -9,6 +9,7 @@ import { ConfirmationService } from 'primeng/api';
 import { CommonService } from '../../../../services/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployerService } from '../../employer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-groups-list',
@@ -32,9 +33,11 @@ export class GroupsListComponent implements OnInit, AfterViewInit, OnDestroy {
     private toastr: ToastrService,
     private confirmationService: ConfirmationService,
     private commonService: CommonService,
+    private spinner: NgxSpinnerService,
     private modalService: NgbModal,
     private EmpService: EmployerService
   ) {
+
     this.userDetail = this.commonService.getLoggedUserDetail();
     this.commonService.profileData().then(res => {
       this._profile_data = res[0];
@@ -104,6 +107,7 @@ export class GroupsListComponent implements OnInit, AfterViewInit, OnDestroy {
         ajax: (dataTablesParameters: any, callback) => {
           this.service.lists(dataTablesParameters).subscribe(res => {
             if (res['status']) {
+              this.spinner.hide();
               this.groups = res['groups'];
               // if (this.groups.length == 0) {
               //   var el = document.getElementById('DataTables_Table_0_paginate');

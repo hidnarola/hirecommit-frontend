@@ -7,6 +7,7 @@ import { EmployerService } from '../../views/employer/employer.service';
 import { CandidateService } from '../../views/shared-components/candidates/candidate.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-profile',
@@ -61,10 +62,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private candidateService: CandidateService,
     private toastr: ToastrService,
     private route: Router,
+    private spinner: NgxSpinnerService,
     private confirmationService: ConfirmationService,
     private commonService: CommonService) {
     this.currentUrl = this.route.url;
-
+    this.spinner.show();
     this.isProd = environment.production;
     this.isStaging = environment.staging;
     this.userDetail = this.service.getLoggedUserDetail();
@@ -73,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     };
 
     this.service.profileData().then(res => {
+
       this._profile_data = res[0];
     });
     this.employerForm();
@@ -129,6 +132,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       //   this.emp_data = res;
       //   this.employerForm();
       this.getEmploterData().then((resp: any) => {
+        this.spinner.hide();
         // console.log('resp from profile getdeatil=>', resp);
 
         // setTimeout(() => {
@@ -167,14 +171,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         // });
 
+      }, err => {
+        this.spinner.hide();
       });
     } else if (this.userDetail.role === 'candidate') {
+
       // this.commonService.getuserdata.subscribe(res => {
       //   console.log('res=>', res);
 
       //   this.emp_data = res;
       //   this.candidateForm();
       this.getCandidate().then(async (resp: any) => {
+        this.spinner.hide();
         //     console.log('resp=>', resp);
 
         //     setTimeout(() => {
@@ -219,6 +227,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         // });
 
+      }, err => {
+        this.spinner.hide();
       });
     }
 
@@ -235,8 +245,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     // 'ContentType',
     // 'Metadata',
     // 'Body'
-    console.log('im here=======>', data);
-
     const blob = new Blob(data.blob, { type: data.type });
 
     return new Promise((ok, x) => {

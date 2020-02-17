@@ -187,7 +187,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private modalService: NgbModal,
   ) {
-
     this.spinner.show();
     this.userDetail = this.commonService.getLoggedUserDetail();
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
@@ -200,13 +199,12 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       });
     }
 
+
+
     // check for add or edit
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
     });
-
-
-
   }
 
   formInit = () => {
@@ -516,7 +514,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
     this.userDetail = this.commonService.getLoggedUserDetail();
     // this.setGroupFormControl()
     //   To get candidates list
-    // this.spinner.show();
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.getCandidateList()
         .then(res => {
@@ -527,19 +524,17 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
         .then(res => {
           if (this.route.snapshot.data.title !== 'Edit' && this.route.snapshot.data.title !== 'View') {
             //  spinner hide
-            this.spinner.hide();
+            // this.spinner.hide();
           } else {
-            this.spinner.hide();
+            // this.spinner.hide();
           }
         })
         .then(res => {
           if (this.route.snapshot.data.title === 'Edit') {
-            this.spinner.show();
             this.panelTitle = 'Edit';
             this.is_Edit = true;
 
           } else if (this.route.snapshot.data.title === 'View') {
-            this.spinner.show();
             this.panelTitle = 'View';
             this.is_View = true;
             this.getDetail(this.id);
@@ -560,6 +555,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             }
             if (this.response) {
               if (this.is_Add) {
+                // this.spinner.hide();
                 this.form.controls['email'].setValue(res['offer'].email);
                 this.form.controls['candidate_name'].setValue(res['offer'].candidate_name);
                 if (res['offer'].title) {
@@ -568,12 +564,18 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 this.form.controls['location'].setValue(res['offer'].location);
 
                 this.form.controls.salarytype.setValue(res['offer'].salarytype);
+
                 if (res['offer'].salarybracket !== '') {
+
                   this.form.controls['salarybracket'].setValue(res['offer'].salarybracket);
+                  document.getElementById('salarybracket_from').setAttribute('disabled', 'true');
+                  document.getElementById('salarybracket_to').setAttribute('disabled', 'true');
                 }
-                if (res['offer'].salarybracket_from !== '' && res['offer'].salarybracket_to !== '') {
+                else if (res['offer'].salarybracket_from !== '' && res['offer'].salarybracket_to !== '') {
+
                   this.form.controls['salarybracket_from'].setValue(res['offer'].salarybracket_from);
                   this.form.controls['salarybracket_to'].setValue(res['offer'].salarybracket_to);
+                  document.getElementById('salarybracket').setAttribute('disabled', 'true');
                 }
 
                 if (res['offer'].expirydate !== null) {
@@ -674,10 +676,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             this.getDetail(this.id).then((resp: any) => {
 
               if (res['offer'] && resp['offer']) {
-                this.spinner.hide();
+                // this.spinner.hide();
                 const current_date = moment();
                 this.d = moment(new Date(res[`offer`].expirydate));
                 setTimeout(() => {
+                  this.spinner.hide();
                   if (res[`offer`]['communicationFieldItems'] && res[`offer`]['communicationFieldItems'].length > 0) {
                     this.isSetCommunication = true;
                   }
@@ -794,8 +797,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                     this.form.controls['acceptanceDate'].setValue('Date of Offer Acceptance');
                   }// this.form.controls['acceptanceDate'].setValue(res['data'].acceptedAt);
                   if (this.is_Edit) {
-                    this.spinner.hide();
+
                     setTimeout(() => {
+                      // this.spinner.hide();
                       const current_date = moment();
                       this.d = moment(new Date(res[`offer`].expirydate));
                       this.joining_Date = moment(new Date(res[`offer`].joiningdate));
@@ -1006,7 +1010,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                       this.grpId = this.resData.user_id;
                       this.socketService.joinGrp(this.resData.user_id);
 
-                      this.spinner.hide();
+
                       this.groupDetail(res[`offer`].groups);
 
                     }, 200);
@@ -1017,6 +1021,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                   // edit offer
                   if (this.is_Edit) {
                     setTimeout(() => {
+                      this.spinner.hide();
                       const current_date = moment();
                       this.d = moment(new Date(resp[`offer`].expirydate));
                       this.joining_Date = moment(new Date(resp[`offer`].joiningdate));
@@ -1353,7 +1358,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                       this.grpId = this.resData.user_id;
                       this.socketService.joinGrp(this.resData.user_id);
 
-                      this.spinner.hide();
+                      // this.spinner.hide();
                       this.groupDetail(resp[`offer`].groups);
 
                     }, 200);
@@ -1362,7 +1367,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
                 }
               } else if (res === undefined && resp === undefined) {
-                this.spinner.hide();
+                // this.spinner.hide();
                 this.formInit();
               }
             });
@@ -1375,21 +1380,20 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
 
     } else if (this.userDetail.role === 'candidate' || this.userDetail.role === 'admin') {
-      this.spinner.hide();
+      this.spinner.show();
       this.getDetail(this.id);
     }
   }
 
   // getDetail
   async getDetail(id: string) {
-    this.spinner.show();
     id = this.id;
     if (id) {
       if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
         return new Promise((pass, fail) => {
           this.service.offer_detail(id).subscribe((resp: any) => {
-            this.spinner.hide();
             if (this.is_View) {
+              this.spinner.hide();
               // if (!(resp['data'].status === 'Accepted')) {
               resp['data'].offertype = (this.offer_type_optoins.find(o => o.value === resp['data'].offertype).label);
               // }
@@ -1446,7 +1450,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               this.service.status(this.resData.status).subscribe(resp => {
                 this.offerStatus = resp['status'];
               });
-              this.spinner.hide();
+              // this.spinner.hide();
               this.groupDetail(resp.groups);
 
             }
@@ -1461,14 +1465,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           });
 
         });
-      }
-
-      if (this.userDetail.role === 'candidate') {
+      } else if (this.userDetail.role === 'candidate') {
         this.service.offer_detail_candidate(this.id).subscribe((res) => {
-          this.is_View = true;
-          this.spinner.hide();
-          this.resData = res[`data`][0];
 
+          // this.is_View = true;
+          this.resData = res[`data`][0];
           if (this.is_View) {
             this.resData.offertype = (this.offer_type_optoins.find(o => o.value === this.resData.offertype).label);
           }
@@ -1490,75 +1491,74 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               this.isCustomFieldView = true;
             }
           });
-          this.spinner.hide();
           this.is_View = true;
-          this.resData = res[`data`][0];
+          // this.resData = res[`data`][0];
+          this.spinner.hide()
+        }, err => {
+          this.spinner.hide();
         });
-
-
-
       } else if (this.userDetail.role === 'admin') {
 
         //  do code here for admin side - offer detail
         this.adminService.offer_detail_admin(this.id).subscribe((res) => {
-          this.spinner.hide();
+          if (res) {
 
-
-
-          // res[`data`].offertype = (this.offer_type_optoins.find(o => o.value === res[`data`].offertype).label);
-          if (res[`data`][`AdHoc`].length > 0) {
-            res[`data`][`AdHoc`].forEach(element => {
-              element.AdHoc_trigger = (this.Trigger_Option.find(o => o.value === element.AdHoc_trigger).label);
-            });
-          }
-
-          if (res[`data`][`communication`].length > 0) {
-            res[`data`][`communication`].forEach(element => {
-              element.trigger =
-                (this.Trigger_Option.find(o => o.value === element.trigger).label);
-            });
-            // res[`data`][`communication`][0].trigger =
-            //   (this.Trigger_Option.find(o => o.value === res[`data`][`communication`][0].trigger).label);
-          }
-
-
-          // disabled summernote
-          setTimeout(function () {
-            const len = document.getElementsByClassName('note-editable').length;
-            for (let p = 0; p < len; p++) {
-              document.getElementsByClassName('note-editable')[p].setAttribute('contenteditable', 'false');
+            // res[`data`].offertype = (this.offer_type_optoins.find(o => o.value === res[`data`].offertype).label);
+            if (res[`data`][`AdHoc`].length > 0) {
+              res[`data`][`AdHoc`].forEach(element => {
+                element.AdHoc_trigger = (this.Trigger_Option.find(o => o.value === element.AdHoc_trigger).label);
+              });
             }
-          }, 500);
+
+            if (res[`data`][`communication`].length > 0) {
+              res[`data`][`communication`].forEach(element => {
+                element.trigger =
+                  (this.Trigger_Option.find(o => o.value === element.trigger).label);
+              });
+              // res[`data`][`communication`][0].trigger =
+              //   (this.Trigger_Option.find(o => o.value === res[`data`][`communication`][0].trigger).label);
+            }
 
 
-          this.resData = res[`data`];
-          this.groupData.high_unopened = this.resData.high_unopened;
-          this.groupData.high_notreplied = this.resData.high_notreplied;
-          this.groupData.medium_unopened = this.resData.medium_unopened;
-          this.groupData.medium_notreplied = this.resData.medium_notreplied;
-          this.resData.offertype = (this.offer_type_optoins.find(o => o.value === this.resData.offertype).label);
-          if (this.resData.acceptedAt) {
-            this.isAcceptedView = moment(new Date(this.resData.acceptedAt)).format('DD/MM/YYYY');
+            // disabled summernote
+            setTimeout(function () {
+              const len = document.getElementsByClassName('note-editable').length;
+              for (let p = 0; p < len; p++) {
+                document.getElementsByClassName('note-editable')[p].setAttribute('contenteditable', 'false');
+              }
+            }, 500);
+            this.resData = res[`data`];
+            this.groupData.high_unopened = this.resData.high_unopened;
+            this.groupData.high_notreplied = this.resData.high_notreplied;
+            this.groupData.medium_unopened = this.resData.medium_unopened;
+            this.groupData.medium_notreplied = this.resData.medium_notreplied;
+            this.resData.offertype = (this.offer_type_optoins.find(o => o.value === this.resData.offertype).label);
+            if (this.resData.acceptedAt) {
+              this.isAcceptedView = moment(new Date(this.resData.acceptedAt)).format('DD/MM/YYYY');
+            } else {
+              this.isAcceptedView = 'Date of Offer Acceptance';
+            }
+            // if (
+            //   !(this.resData.high_notreplied || this.resData.high_unopened || this.resData.medium_notreplied || this.resData.medium_unopened)) {
+            //   this.getGroupDetails = false;
+            // } else if (this.group_optoins.value === '') {
+            //   this.getGroupDetails = false;
+            // }
+            this.resData.customfeild.map(res => {
+              if (res.value) {
+                this.isCustomFieldView = true;
+              }
+            });
+            this.candidateData = res['candidate_data']['data'];
+            this.is_View = true;
+            this.spinner.hide();
+            this.resData.groupName = res['data']['groups']['name'];
+            this.groupDetail(res[`data`].groups);
           } else {
-            this.isAcceptedView = 'Date of Offer Acceptance';
+            this.spinner.hide();
           }
-          // if (
-          //   !(this.resData.high_notreplied || this.resData.high_unopened || this.resData.medium_notreplied || this.resData.medium_unopened)) {
-          //   this.getGroupDetails = false;
-          // } else if (this.group_optoins.value === '') {
-          //   this.getGroupDetails = false;
-          // }
-          this.resData.customfeild.map(res => {
-            if (res.value) {
-              this.isCustomFieldView = true;
-            }
-          });
-          this.candidateData = res['candidate_data']['data'];
+        }, err => {
           this.spinner.hide();
-          this.is_View = true;
-          this.resData.groupName = res['data']['groups']['name'];
-          this.groupDetail(res[`data`].groups);
-
         });
 
       }
@@ -2629,7 +2629,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           }
 
         } else if (this.is_Add) {
-
           if (this.istouchedArray.length > 0) {
             if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
               || this.offer.joiningdate === '') {
@@ -2654,7 +2653,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           }
 
         }
-
       }
     }
     this.socketService.leaveGrp(this.grpId);

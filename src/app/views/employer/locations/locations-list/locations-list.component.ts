@@ -9,6 +9,7 @@ import { countries } from '../../../../shared/countries';
 import { CommonService } from '../../../../services/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployerService } from '../../employer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-locations-list',
@@ -42,6 +43,7 @@ export class LocationsListComponent implements OnInit, AfterViewInit, OnDestroy 
     private toastr: ToastrService,
     private commonService: CommonService,
     private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
     private EmpService: EmployerService
   ) {
     this.userDetail = this.commonService.getLoggedUserDetail();
@@ -67,6 +69,7 @@ export class LocationsListComponent implements OnInit, AfterViewInit, OnDestroy 
           this.service.view_location(dataTablesParameters).subscribe(res => {
 
             if (res['status'] === 1) {
+              this.spinner.hide();
               this.locations = res['location'];
               // if (this.locations.length == 0) {
               //   var el = document.getElementById('DataTables_Table_0_paginate');

@@ -5,6 +5,7 @@ import * as  moment from 'moment';
 import { CommonService } from '../../../../../services/common.service';
 import { Location } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-report-history',
   templateUrl: './report-history.component.html',
@@ -22,9 +23,11 @@ export class ReportHistoryComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private commonservice: CommonService,
+    private spinner: NgxSpinnerService,
     private toastr: ToastrService,
     private _location: Location
   ) {
+    this.spinner.show();
     this.userDetail = this.commonservice.getLoggedUserDetail();
 
     // this.route.params.subscribe((params: Params) => {
@@ -40,19 +43,19 @@ export class ReportHistoryComponent implements OnInit {
 
     this.service.history(this.id).subscribe(res => {
       const history = res['data'];
+      this.spinner.hide();
       this.history = history;
       this.candidate = history['candidate'];
       this.employer = history['employer'];
     }, (err) => {
+      this.spinner.hide();
       this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
     });
 
   }
   Back() {
     if (this.userDetail.role === 'admin') {
-
       this._location.back();
-
     }
   }
 

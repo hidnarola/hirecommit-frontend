@@ -28,7 +28,6 @@ export class RoleGuardService implements CanActivate {
       this.fromPopup = true;
 
       if (res) {
-
         if (this.redirect) {
           this.router.navigate([res.newurl]);
         }
@@ -54,10 +53,10 @@ export class RoleGuardService implements CanActivate {
               this.router.navigate([res.url]);
             }
           });
+          this.redirect = false;
         }
 
       } else if (!res) {
-
       }
       this.redirect = false;
     });

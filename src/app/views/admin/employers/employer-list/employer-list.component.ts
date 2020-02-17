@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from 'primeng/api';
 import { SocketService } from '../../../../services/socket.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-employer-list',
@@ -29,9 +30,11 @@ export class EmployerListComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: ActivatedRoute,
     private service: EmployerService,
     private toastr: ToastrService,
+    private spinner: NgxSpinnerService,
     private confirmationService: ConfirmationService,
     private socketService: SocketService
   ) {
+    // this.spinner.show();
     // console.log('this.router.snapshot.data.type => ', this.router.snapshot.data.type);
     if (this.router.snapshot.data.type === 'new') {
       this.employer_type = 'New';
@@ -57,6 +60,7 @@ export class EmployerListComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.router.snapshot.data.type === 'approved') {
           this.service.get_approved_employer(dataTablesParameters).subscribe(res => {
             if (res['status'] === 1) {
+              // this.spinner.hide();
               this.employer_data = res['user'];
               // if ($(`DataTables_Table_0_paginate`).length === 0) {
               //   $('#DataTables_Table_0_paginate').hide();
@@ -64,12 +68,14 @@ export class EmployerListComponent implements OnInit, AfterViewInit, OnDestroy {
               callback({ recordsTotal: res[`recordsTotal`], recordsFiltered: res[`recordsTotal`], data: [] });
             }
           }, err => {
+            // this.spinner.hide();
             this.toastr.error(err['error'].message, 'Error!', { timeOut: 3000 });
             callback({ recordsTotal: 0, recordsFiltered: 0, data: [] });
           });
         } else if (this.router.snapshot.data.type === 'new') {
           this.service.get_new_employer(dataTablesParameters).subscribe(res => {
             if (res['status'] === 1) {
+              // this.spinner.hide();
               this.employer_data = res['user'];
               if ($(`DataTables_Table_0_paginate`).length === 0) {
                 $('#DataTables_Table_0_paginate').hide();
@@ -78,6 +84,7 @@ export class EmployerListComponent implements OnInit, AfterViewInit, OnDestroy {
 
             }
           }, err => {
+            // this.spinner.hide();
             this.toastr.error(err['error'].message, 'Error!', { timeOut: 3000 });
             callback({ recordsTotal: 0, recordsFiltered: 0, data: [] });
           });
