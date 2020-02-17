@@ -23,6 +23,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   isFormSubmitted = false;
   group: any;
   msg: any;
+
   isSubmitted = false;
   cancel_link = '/employer/groups/list';
   groupData: any = [];
@@ -71,6 +72,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
     private service: GroupService,
     private toastr: ToastrService,
     private router: Router,
+    private spinner: NgxSpinnerService,
     private commonService: CommonService,
     private modalService: NgbModal,
     private EmpService: EmployerService
@@ -195,7 +197,9 @@ export class GroupAddComponent implements OnInit, OnDestroy {
 
   // add new communication
   add_new_communication(data_index = null) {
+    this.spinner.show();
     let index = 0;
+
     if (data_index == null) {
       if (this.communicationData && this.communicationData.length > 0) {
         index = this.communicationData.length;
@@ -207,9 +211,12 @@ export class GroupAddComponent implements OnInit, OnDestroy {
         index = this.communicationData.length;
       }
     }
+
+
     // if (data_index === 4) {
     //   this.disabled = true;
     // }
+
     const new_communication = {
       'communicationname': '',
       'trigger': '',
@@ -228,9 +235,13 @@ export class GroupAddComponent implements OnInit, OnDestroy {
       message: ['', [Validators.required, this.noWhitespaceValidator]]
       // message: ['', Validators.required]
     }));
+    setTimeout(() => {
+      this.spinner.hide();
+      this.communicationData.push(new_communication);
+      this.communicationForm.updateValueAndValidity();
+    }, 500);
 
-    this.communicationData.push(new_communication);
-    this.communicationForm.updateValueAndValidity();
+
 
   }
 

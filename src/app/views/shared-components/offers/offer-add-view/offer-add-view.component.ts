@@ -2022,7 +2022,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
   // Add AdHoc Communication
   add_new_AdHoc_communication(data_index = null) {
-
+    this.spinner.show();
     let index = 0;
     if (data_index == null) {
       if (this.AdHocCommunicationData && this.AdHocCommunicationData.length > 0) {
@@ -2052,11 +2052,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       AdHoc_subject: ['', [Validators.required, this.noWhitespaceValidator]],
       AdHoc_message: ['', [Validators.required, this.noWhitespaceValidator]]
     }));
-
-    this.AdHocCommunicationData.push(new_communication);
-    this.updateValidation();
-
-
+    setTimeout(() => {
+      this.spinner.hide();
+      this.AdHocCommunicationData.push(new_communication);
+      this.updateValidation();
+    }, 300);
   }
 
   // Remove communication
