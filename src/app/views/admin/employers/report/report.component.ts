@@ -7,6 +7,7 @@ import { OfferService } from '../../../shared-components/offers/offer.service';
 import { SocketService } from '../../../../services/socket.service';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-report',
@@ -31,7 +32,9 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: ActivatedRoute,
     private offerService: OfferService,
     private socketService: SocketService,
+    private spinner: NgxSpinnerService,
     private toastr: ToastrService) {
+    // this.spinner.show();
     this.router.params.subscribe((params: Params) => {
       this.id = params['id'];
 
@@ -67,6 +70,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
         // if (this.router.snapshot.data.type === 'approved') {
         this.service.offer_report(this.id, dataTablesParameters).subscribe(res => {
           if (res['status'] === 1) {
+            // this.spinner.hide();
             this.offerData = res['offer'];
             this.offerData.forEach(element => {
               this.d = moment(new Date(element.expirydate));
@@ -81,6 +85,7 @@ export class ReportComponent implements OnInit, OnDestroy, AfterViewInit {
             callback({ recordsTotal: res[`recordsTotal`], recordsFiltered: res[`recordsTotal`], data: [] });
           }
         }, err => {
+          // this.spinner.hide();
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           callback({ recordsTotal: 0, recordsFiltered: 0, data: [] });
         });

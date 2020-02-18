@@ -158,7 +158,11 @@ export class AdminLoginComponent implements OnInit {
           this.reset();
         } else {
           this.show_spinner = false;
-          this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
+          if (err['error']['message']) {
+            this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
+          } else {
+            this.toastr.error('Something went wrong, please check after sometime.', 'Error!', { timeOut: 3000 });
+          }
           this.reset();
         }
       }

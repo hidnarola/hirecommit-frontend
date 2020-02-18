@@ -17,6 +17,9 @@ export class EmployerService {
   employer = new BehaviorSubject(null);
   employerList = this.employer.asObservable();
 
+  admin_information(data): Observable<any[]> {
+    return this.http.post<any[]>(`${this.url}` + '/employer/display_message', data);
+  }
   checkHere() {
     return this.employer.next({});
   }

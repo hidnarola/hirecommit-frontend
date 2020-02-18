@@ -28,11 +28,9 @@ export class RoleGuardService implements CanActivate {
       this.fromPopup = true;
 
       if (res) {
-
         if (this.redirect) {
           this.router.navigate([res.newurl]);
         }
-
         if (!this.redirect) {
           this.confirmationService.confirm({
             message: 'Are you sure you want to leave this page?',
@@ -54,10 +52,10 @@ export class RoleGuardService implements CanActivate {
               this.router.navigate([res.url]);
             }
           });
+          this.redirect = false;
         }
 
       } else if (!res) {
-
       }
       this.redirect = false;
     });

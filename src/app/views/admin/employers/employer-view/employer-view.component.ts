@@ -50,6 +50,7 @@ export class EmployerViewComponent implements OnInit {
     private employerService: emp,
     private confirmationService: ConfirmationService,
   ) {
+    this.spinner.show();
     this.userDetail = this.commonService.getLoggedUserDetail();
 
     if (this.route.snapshot.data.type === 'new') {
@@ -95,6 +96,7 @@ export class EmployerViewComponent implements OnInit {
 
   getDetails() {
     this.service.getemployerDetail(this.id).subscribe(res => {
+      this.spinner.hide();
       this.employer_detail = res['data'];
       this.email = res['data']['user_id']['email'];
       this.country = res['data']['businesstype']['country'];
@@ -116,6 +118,7 @@ export class EmployerViewComponent implements OnInit {
         this.buttonValue1 = 'Cancel';
       }
     }, (err) => {
+      this.spinner.hide();
       this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
     });
   }
@@ -148,7 +151,6 @@ export class EmployerViewComponent implements OnInit {
       this.confirmationService.confirm({
         message: 'Are you sure that you want to update Employer Profile?',
         accept: () => {
-
           this.service.update_employer(this.obj).subscribe(res => {
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
             this.show_spinner = false;

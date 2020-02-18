@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { CommonService } from '../../../../services/common.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EmployerService } from '../../employer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-custom-field-list',
@@ -29,10 +30,12 @@ export class CustomFieldListComponent implements OnInit, AfterViewInit, OnDestro
     private toastr: ToastrService,
     private service: CustomFieldService,
     private router: Router,
+    private spinner: NgxSpinnerService,
     private commonService: CommonService,
     private modalService: NgbModal,
     private EmpService: EmployerService
   ) {
+
     this.userDetail = this.commonService.getLoggedUserDetail();
     this.commonService.profileData().then(res => {
       this._profile_data = res[0];
@@ -60,6 +63,7 @@ export class CustomFieldListComponent implements OnInit, AfterViewInit, OnDestro
           this.dataTablesParameters = dataTablesParameters;
           this.service.view_custom_feild(dataTablesParameters).subscribe(res => {
             if (res['status'] === 1) {
+              this.spinner.hide();
               this.data = res['salary'];
               callback({ recordsTotal: res['recordsTotal'], recordsFiltered: res['recordsTotal'], data: [] });
             }

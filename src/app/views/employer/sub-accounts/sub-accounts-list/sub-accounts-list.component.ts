@@ -6,9 +6,11 @@ import { SubAccountService } from '../sub-accounts.service';
 import { ConfirmationService } from 'primeng/api';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmployerService as Emp } from '../../../admin/employers/employer.service'
 import { EmployerService } from '../../employer.service';
 import { CommonService } from '../../../../services/common.service';
 import { EmployerService as emp } from '../../../admin/employers/employer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-sub-accounts-list',
   templateUrl: './sub-accounts-list.component.html',
@@ -36,12 +38,14 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
     private confirmationService: ConfirmationService,
     private toastr: ToastrService,
     private modalService: NgbModal,
+    private spinner: NgxSpinnerService,
     private EmpService: EmployerService,
+    private Admin_employer_service: Emp,
     private commonService: CommonService,
     private employer_admin_Service: emp,
     private route: ActivatedRoute,
   ) {
-
+    // this.spinner.show();
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
     });
@@ -67,8 +71,8 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
         destroy: true,
         ajax: (dataTablesParameters: any, callback) => {
           this.service.view_sub_account(dataTablesParameters).subscribe(res => {
-
             if (res['status']) {
+              this.spinner.hide();
               this.data = res['user'];
               this.subAccountList = [];
               this.data.forEach(element => {
@@ -132,8 +136,8 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
         ajax: (dataTablesParameters: any, callback) => {
           dataTablesParameters['id'] = this.id;
           this.employer_admin_Service.get_sub_employers(dataTablesParameters).subscribe(res => {
-
             if (res['status']) {
+              // this.spinner.hide();
               this.data = res['user'];
               this.subAccountList = [];
               this.data.forEach(element => {
@@ -198,11 +202,20 @@ export class SubAccountsListComponent implements OnInit, AfterViewInit, OnDestro
   }
   open(content) {
     this.modalService.open(content);
-    this.EmpService.information({ 'msg_type': 'sub_accounts' }).subscribe(res => {
-      this.msg = res['message'];
-    }, (err) => {
-      this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
-    });
+    if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
+      this.EmpService.information({ 'msg_type': 'sub_accounts' }).subscribe(res => {
+        this.msg = res['message'];
+      }, (err) => {
+        this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
+      });
+    } else if (this.userDetail.role === 'admin') {
+      this.Admin_employer_service.admin_information({ 'msg_type': 'sub_accounts' }).subscribe(res => {
+        this.msg = res['message'];
+      }, (err) => {
+        this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
+      });
+    }
+
   }
 
   delete(user_id) {

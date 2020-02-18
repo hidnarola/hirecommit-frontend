@@ -279,8 +279,8 @@ export class GroupEditComponent implements OnInit {
 
   // add new communication
   add_new_communication(data_index = null) {
-
     let index = 0;
+    this.spinner.show();
     if (data_index == null) {
       if (this.communicationData && this.communicationData.length > 0) {
         index = this.communicationData.length;
@@ -309,9 +309,12 @@ export class GroupEditComponent implements OnInit {
       subject: ['', [Validators.required, this.noWhitespaceValidator]],
       message: ['', [Validators.required, this.noWhitespaceValidator]]
     }));
+    setTimeout(() => {
+      this.spinner.hide()
+      this.communicationData.push(new_communication);
+      this.updateValidation();
+    }, 500);
 
-    this.communicationData.push(new_communication);
-    this.updateValidation();
   }
 
   // no white space
