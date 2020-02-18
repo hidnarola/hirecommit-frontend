@@ -24,7 +24,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   group: any;
   msg: any;
 
-  isSubmitted = false;
+  isNavigate = false;
   cancel_link = '/employer/groups/list';
   groupData: any = [];
   editedData: any;
@@ -346,7 +346,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
 
   //  on submit of communication
   onCommunicationSubmit(flag) {
-    this.isSubmitted = true;
+    this.isNavigate = true;
     this.formData = new FormData();
     if (flag) {
       if (this.show_communication) {
@@ -387,11 +387,13 @@ export class GroupAddComponent implements OnInit, OnDestroy {
         }
 
         this.service.edit_group(this.formData).subscribe(res => {
+          this.commonService.setuserData('');
+          this.isNavigate = true;
           this.show_spinner = true;
           if (res['data']['status'] === 1) {
             this.isFormSubmitted = false;
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
-            this.commonService.setuserData('');
+
           }
           if (this.userDetail.role === 'employer') {
             this.router.navigate(['/employer/groups/list']);
@@ -417,7 +419,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   }
 
   Cancel() {
-    this.isSubmitted = true;
+    this.isNavigate = true;
     if (this.userDetail.role === 'employer') {
       this.router.navigate([this.cancel_link]);
     } else if (this.userDetail.role === 'sub-employer') {
@@ -428,18 +430,22 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.group = this.addGroup.value;
-
-      if (this.group.name !== null || !this.isSubmitted) {
-        const obj = {
-          group: this.group,
-          group_id: this.group_id,
-          communication: this.communicationData,
-          ispopup: true
-        };
-        this.router.navigate([this.currentUrl]);
-        this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-        this.commonService.setuserData(obj);
+      if (this.isNavigate === false) {
+        if (this.group.name !== null) {
+          const obj = {
+            group: this.group,
+            group_id: this.group_id,
+            communication: this.communicationData,
+            ispopup: true
+          };
+          this.router.navigate([this.currentUrl]);
+          this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+          this.commonService.setuserData(obj);
+        }
+      } else if (this.isNavigate === true) {
+        this.commonService.setUnSavedData('');
       }
+
 
     }
   }
