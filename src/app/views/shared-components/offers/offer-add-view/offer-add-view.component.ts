@@ -1451,7 +1451,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 this.offerStatus = resp['status'];
               });
               // this.spinner.hide();
-              this.groupDetail(resp.groups);
+              this.groupDetail(this.resData.groups);
 
             }
             const obj = {
@@ -1486,11 +1486,15 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           } else {
             this.isAcceptedView = 'Date of Offer Acceptance';
           }
+
+
           this.resData.customfeild.map(res => {
             if (res.value) {
               this.isCustomFieldView = true;
             }
           });
+
+
           this.is_View = true;
           // this.resData = res[`data`][0];
           this.spinner.hide()
@@ -1722,6 +1726,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           // this.getGroupDetails = true;
           this.isSetCommunication = true;
           this.setGroupFormControl();
+          this.spinner.show();
           this.form.controls['high_unopened'].setValue(res[`data`][`data`][0].high_unopened);
           this.form.controls['high_notreplied'].setValue(res[`data`][`data`][0].high_notreplied);
           this.form.controls['medium_unopened'].setValue(res[`data`][`data`][0].medium_unopened);
@@ -1735,6 +1740,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
         this.groupData = res['data']['data'][0];
         if (res['communication']['data'] && res['communication']['data'].length > 0) {
+
           this.communicationData = res['communication']['data'][0]['communication'];
           this.isAdHoc_ButtonShow = true;
         }
@@ -1765,7 +1771,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             }));
             _array.push(new_communication);
           });
-          this.communicationData = _array;
+          setTimeout(() => {
+            this.spinner.hide();
+            this.communicationData = _array;
+          }, 200);
+
         } else {
           this.add_new_communication();
         }

@@ -246,6 +246,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   }
 
   // Remove communication
+
   remove_communication(index: number) {
     delete this.communicationData[index];
     this.communicationFieldItems.removeAt(index);
@@ -255,7 +256,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
         array.push(this.communicationData[i]);
       }
     }
-
+    this.communicationData = array;
   }
 
   public onReady(editor) {
