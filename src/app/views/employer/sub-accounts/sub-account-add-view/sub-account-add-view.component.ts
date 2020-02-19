@@ -75,18 +75,20 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
           }
         }
         if (this.is_Edit) {
-          if ((resp !== '' || resp !== undefined) && (res.username == null || res.admin_rights == null || res.email == null)) {
-            this.spinner.hide();
+          setTimeout(() => {
+            if ((resp !== '' || resp !== undefined) && (res.username == null || res.admin_rights == null || res.email == null)) {
+              this.spinner.hide();
 
-            this.detail = { ...resp };
-          } else if (res !== '' && resp !== '') {
-            this.spinner.hide();
+              this.detail = { ...resp };
+            } else if (res !== '' && resp !== '') {
+              this.spinner.hide();
 
-            this.detail = { ...resp, ...res };
-          } else {
-            this.spinner.hide();
-            this.detail = { ...res };
-          }
+              this.detail = { ...resp, ...res };
+            } else {
+              this.spinner.hide();
+              this.detail = { ...res };
+            }
+          }, 300);
         }
 
         // }
@@ -394,7 +396,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
             this.commonService.setuserData('');
           }
         } else {
-          if (this.istouchedArray.length > 0 || (this.detail.username || this.detail.email || this.detail.admin_rights !== false)) {
+          if (this.detail.username || this.detail.email || this.detail.admin_rights) {
             // if ) {
             this.commonService.setuserData(this.detail);
             this.router.navigate([this.currentUrl]);

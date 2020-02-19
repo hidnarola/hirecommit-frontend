@@ -431,7 +431,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.group = this.addGroup.value;
       if (this.isNavigate === false) {
-        if (this.group.name !== null) {
+        if (this.group.name) {
           const obj = {
             group: this.group,
             group_id: this.group_id,
