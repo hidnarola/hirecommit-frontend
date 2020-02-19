@@ -501,8 +501,11 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
   getGroupdays() {
     return new Promise((ok, fail) => {
       this.Groupservice.alert_days().subscribe(res => {
-        this.groupData = res[`data`];
-        ok(this.groupData);
+        setTimeout(() => {
+          this.groupData = res[`data`];
+          ok(this.groupData);
+        }, 200);
+
       }, (err) => {
         this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         fail(err);
@@ -539,11 +542,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
             this.is_View = true;
             this.getDetail(this.id);
           } else if (this.route.snapshot.data.title === 'Add') {
-            this.spinner.hide();
             this.is_Add = true;
             this.panelTitle = 'Add';
           }
-
         }).then(res => {
           this.commonService.getuserdata.subscribe(res => {
             this.response = res['offer'];
@@ -552,6 +553,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
               || this.response.email === ''
               || this.response === 'undefined') {
               this.response = '';
+
             }
             if (this.response) {
               if (this.is_Add) {
@@ -1329,12 +1331,17 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
 
                       this.resData = resp[`offer`];
-                      // if (this.resData.[`offer`]high_unopened !== '' && this.resData.high_notreplied !== '' && this.resData.medium_unopened !== '' && this.resData.medium_notreplied !== '') {
-                      this.groupData.high_unopened = this.resData.high_unopened;
-                      this.groupData.high_notreplied = this.resData.high_notreplied;
-                      this.groupData.medium_unopened = this.resData.medium_unopened;
-                      this.groupData.medium_notreplied = this.resData.medium_notreplied;
-                      // }
+                      if (this.resData.high_unopened !== '' && this.resData.high_notreplied !== '' &&
+                        this.resData.medium_unopened !== '' && this.resData.medium_notreplied !== '') {
+                        console.log('in condition=======>');
+                        setTimeout(() => {
+                          this.groupData.high_unopened = this.resData.high_unopened;
+                          this.groupData.high_notreplied = this.resData.high_notreplied;
+                          this.groupData.medium_unopened = this.resData.medium_unopened;
+                          this.groupData.medium_notreplied = this.resData.medium_notreplied;
+                        }, 200);
+
+                      }
 
                       if (this.resData.acceptedAt) {
                         this.isAcceptedView = moment(new Date(this.resData.acceptedAt)).format('DD/MM/YYYY');
@@ -1361,7 +1368,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                       // this.spinner.hide();
                       this.groupDetail(resp[`offer`].groups);
 
-                    }, 200);
+                    }, 300);
                   }
 
 
@@ -1383,6 +1390,8 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       this.spinner.show();
       this.getDetail(this.id);
     }
+
+
   }
 
   // getDetail
@@ -1497,7 +1506,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
           this.is_View = true;
           // this.resData = res[`data`][0];
-          this.spinner.hide()
+          this.spinner.hide();
         }, err => {
           this.spinner.hide();
         });
@@ -1613,7 +1622,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
   async customFieldList() {
     this.service.get_customfield().subscribe(
       res => {
-
+        if (this.is_Add) {
+          this.spinner.hide();
+        }
         if (res[`data`].length > 0) {
           this.isCustomFieldAdd = true;
         }
@@ -1665,7 +1676,9 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
       if (groupById) {
         this.form.controls.group.setValue(groupById.value);
         this.getGroupDetails = true;
-        this.setGroupFormControl();
+        if (!this.is_Edit) {
+          this.setGroupFormControl();
+        }
 
         // this.groupData.high_unopened = this.resData.high_unopened;
         // this.groupData.high_notreplied = this.resData.high_notreplied;
@@ -2599,7 +2612,6 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
-
       if (!this.is_View) {
         this.offer = this.form.value;
         this.isPopup = true;
@@ -2639,28 +2651,35 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           }
 
         } else if (this.is_Add) {
-          if (this.istouchedArray.length > 0) {
-            if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
-              || this.offer.joiningdate === '') {
-              this.offer.expirydate = null;
-              this.offer.joiningdate = null;
-            }
-            const obj = {
-              offer: this.offer,
-              ispopup: true
-            };
+          if (this.offer.email != null || this.offer.candidate_name != null || this.offer.title != null
+            || this.offer.salarytype != null || this.offer.location != null || this.offer.salarytype != null
+            || this.offer.salarybracket != null || this.offer.salarybracket_from != null
+            || this.offer.salarybracket_to != null || this.offer.salaryduration != null
+            || this.offer.offertype != null || this.offer.group != null) {
+            if (this.istouchedArray.length > 0) {
+              if (this.offer.expirydate == null || this.offer.expirydate === '' || this.offer.joiningdate == null
+                || this.offer.joiningdate === '') {
+                this.offer.expirydate = null;
+                this.offer.joiningdate = null;
+              }
+              const obj = {
+                offer: this.offer,
+                ispopup: true
+              };
 
-            if (!this.isRelaeased) {
-              this.router.navigate([this.currentUrl]);
-              this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
-              this.commonService.setuserData(obj);
-            } else {
-              this.commonService.setUnSavedData('');
+              if (!this.isRelaeased) {
+                this.router.navigate([this.currentUrl]);
+                this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
+                this.commonService.setuserData(obj);
+              } else {
+                this.commonService.setUnSavedData('');
+                this.commonService.setuserData('');
+              }
+            } else if (this.istouchedArray.length === 0) {
               this.commonService.setuserData('');
             }
-          } else if (this.istouchedArray.length === 0) {
-            this.commonService.setuserData('');
           }
+
 
         }
       }

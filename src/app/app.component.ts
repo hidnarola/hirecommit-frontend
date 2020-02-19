@@ -17,9 +17,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   canLeavePage() {
     return 'Are you sure you want to leave this page ?';
   }
+  checkCoockie: boolean;
   constructor(
     private router: Router, private roleGuard: RoleGuardService, private service: CommonService,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService
+  ) {
+    this.checkCoockie = this.checkCookie();
+  }
 
   ngOnInit() {
 
@@ -30,6 +34,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
 
+  }
+
+
+  checkCookie() {
+    let cookieEnabled = navigator.cookieEnabled;
+    if (!cookieEnabled) {
+      document.cookie = 'testcookie';
+      cookieEnabled = document.cookie.indexOf('testcookie') !== -1;
+    }
+    return cookieEnabled;
   }
 
   ngAfterViewInit() {

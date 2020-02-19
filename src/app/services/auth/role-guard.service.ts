@@ -26,11 +26,7 @@ export class RoleGuardService implements CanActivate {
     this.isStaging = environment.staging;
     this.service.getunSavedData.subscribe(res => {
       this.fromPopup = true;
-
       if (res) {
-        if (this.redirect) {
-          this.router.navigate([res.newurl]);
-        }
         if (!this.redirect) {
           this.confirmationService.confirm({
             message: 'Are you sure you want to leave this page?',
@@ -45,6 +41,7 @@ export class RoleGuardService implements CanActivate {
               // } else {
 
               this.router.navigate([res.newurl]);
+              this.redirect = false;
               // }
               // this.router.navigate([res.newurl]);
             }, reject: () => {
@@ -53,6 +50,9 @@ export class RoleGuardService implements CanActivate {
             }
           });
           this.redirect = false;
+        }
+        if (this.redirect) {
+          this.router.navigate([res.newurl]);
         }
 
       } else if (!res) {

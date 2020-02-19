@@ -265,7 +265,7 @@ export class LocationAddViewComponent implements OnInit {
             }
 
           } else if (this.is_Add) {
-            if (this.detail.city !== '' && this.detail.city !== undefined) {
+            if (this.detail.city) {
               this.commonService.setuserData(this.detail);
               this.router.navigate([this.currentUrl]);
               this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });
