@@ -30,6 +30,8 @@
                                             <label>Website</label>
                                             <input type="text" class="form-control" [(ngModel)]="Website"
                                                 disabled="true" formControlName="website" name="website">
+
+
                                         </div>
                                     </div>
                                     <div class="form-row mb-3">
@@ -122,8 +124,8 @@
                                             <button type="submit" class="btn btn-primary"
                                                 [disabled]="show_spinner">Submit
                                                 <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
-                                            <button type="button" class="btn btn-danger"
-                                                (click)='cancel()'>Close</button>
+                                            <button type="button" class="btn btn-danger" (click)='cancel()'
+                                                [disabled]="isCancelDisable">Close</button>
                                         </div>
                                     </div>
 
@@ -307,8 +309,8 @@
                                             <button type="submit" class="btn btn-primary"
                                                 [disabled]="show_spinner">Submit
                                                 <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
-                                            <button type="button" class="btn btn-danger"
-                                                (click)='cancel1()'>Close</button>
+                                            <button type="button" class="btn btn-danger" (click)='cancel1()'
+                                                [disabled]="isCancelDisable">Close</button>
                                         </div>
                                     </div>
                                 </div>

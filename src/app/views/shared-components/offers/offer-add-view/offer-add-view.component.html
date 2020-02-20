@@ -1058,7 +1058,8 @@
                         <button type="submit" class="btn btn-md btn-primary" (click)="onSubmit(form.valid)"
                             [disabled]="show_spinner">
                             Submit <i *ngIf="show_spinner" class="fa fa-spinner fa-spin"></i></button>
-                        <button type="button" class="btn btn-md btn-danger" (click)='cancel()'>
+                        <button type="button" class="btn btn-md btn-danger" (click)='cancel()'
+                            [disabled]="isCancelDisable">
                             Cancel</button>
                     </div>
 

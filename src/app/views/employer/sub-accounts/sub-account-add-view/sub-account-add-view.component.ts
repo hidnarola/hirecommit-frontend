@@ -33,6 +33,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
   userDetail: any;
   is_Add: boolean = false;
   show_spinner = false;
+  isCancelDisable = false;
   employerID: any;
   currentUrl = '';
   cancel_link = '/employer/sub_accounts/list';
@@ -75,18 +76,20 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
           }
         }
         if (this.is_Edit) {
-          if ((resp !== '' || resp !== undefined) && (res.username == null || res.admin_rights == null || res.email == null)) {
-            this.spinner.hide();
+          setTimeout(() => {
+            if ((resp !== '' || resp !== undefined) && (res.username == null || res.admin_rights == null || res.email == null)) {
+              this.spinner.hide();
 
-            this.detail = { ...resp };
-          } else if (res !== '' && resp !== '') {
-            this.spinner.hide();
+              this.detail = { ...resp };
+            } else if (res !== '' && resp !== '') {
+              this.spinner.hide();
 
-            this.detail = { ...resp, ...res };
-          } else {
-            this.spinner.hide();
-            this.detail = { ...res };
-          }
+              this.detail = { ...resp, ...res };
+            } else {
+              this.spinner.hide();
+              this.detail = { ...res };
+            }
+          }, 300);
         }
 
         // }
@@ -232,7 +235,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
 
   onSubmit(flag: boolean) {
     this.isSubmit = true;
-
+    this.isCancelDisable = true;
     this.submitted = true;
     this.show_spinner = true;
     if (this.id && flag && (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer')) {
@@ -264,10 +267,12 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
               this.router.navigate(['/admin/employers/approved_employer/' + this.employerID + '/sub_accounts/list']);
             }
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
@@ -304,10 +309,12 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
               this.router.navigate(['/admin/employers/approved_employer/' + this.employerID + '/sub_accounts/list']);
             }
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
@@ -348,11 +355,13 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
           }
         }, (err) => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         });
       }
       else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     }
@@ -394,7 +403,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
             this.commonService.setuserData('');
           }
         } else {
-          if (this.istouchedArray.length > 0 || (this.detail.username || this.detail.email || this.detail.admin_rights !== false)) {
+          if (this.detail.username || this.detail.email || this.detail.admin_rights) {
             // if ) {
             this.commonService.setuserData(this.detail);
             this.router.navigate([this.currentUrl]);

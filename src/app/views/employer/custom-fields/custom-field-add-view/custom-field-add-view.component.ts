@@ -26,6 +26,7 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
   isAdd = false;
   isView = false;
   show_spinner = false;
+  isCancelDisable = false;
   userDetail: any;
   cancel_link = '/employer/custom_fields/list';
   currentUrl = '';
@@ -139,6 +140,7 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
 
   onSubmit(valid) {
     this.submitted = true;
+    this.isCancelDisable = true;
     this.show_spinner = true;
     if (this.id && this.id !== 0) {
       if (valid) {
@@ -165,14 +167,17 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
               }
               this.submitted = false;
             }, (err) => {
+              this.isCancelDisable = false;
               this.show_spinner = false;
               this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
             });
           }, reject: () => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
           }
         });
       } else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     } else {
@@ -191,10 +196,12 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
             this.addCustomFeild.reset();
           }
         }, (err) => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         });
       } else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     }

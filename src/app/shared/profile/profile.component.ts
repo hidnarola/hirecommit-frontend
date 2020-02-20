@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ContactNumber: any;
   FirstName: any;
   LastName: any;
+  isCancelDisable = false;
   Candidate_ContactNo: any;
   Candidate_Email: any;
   Candidate_Country: any;
@@ -280,6 +281,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   edit(valid, id) {
+    this.isCancelDisable = true;
     this.submitted = true;
     if (valid) {
       this.show_spinner = true;
@@ -293,7 +295,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
         message: 'Are you sure that you want to update your Profile?',
         accept: () => {
           this.show_spinner = false;
-
           this.Employerservice.update_Profile(this.obj).subscribe(res => {
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
             this.commonService.changedProfileDetail(true);
@@ -318,24 +319,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.route.navigate(['/login']);
               }
             } else {
+              this.isCancelDisable = false;
               console.log('else=>');
 
             }
           },
             err => {
+              this.isCancelDisable = false;
               this.show_spinner = false;
               this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
             }
           );
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
+    } else {
+      this.isCancelDisable = false;
+      this.show_spinner = false;
     }
 
   }
 
   candidate_profile(valid, id) {
+    this.isCancelDisable = true;
     this.submitted = true;
     if (valid) {
       this.show_spinner = true;
@@ -375,20 +383,25 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 this.route.navigate(['/login']);
               }
             } else {
+              this.isCancelDisable = false;
               console.log('else=>');
             }
           },
             err => {
+              this.isCancelDisable = false;
               this.show_spinner = false;
               this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
             }
           );
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
+    } else {
+      this.isCancelDisable = false;
+      this.show_spinner = false;
     }
-    this.show_spinner = false;
 
   }
 

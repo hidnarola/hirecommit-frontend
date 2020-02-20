@@ -29,6 +29,7 @@ export class LocationAddViewComponent implements OnInit {
   panelTitle = 'Add Location';
   buttonTitle: string;
   cnt1: any;
+  isCancelDisable = false;
   cancel_link = '/employer/locations/list';
   is_Edit: boolean = false;
   is_Add: boolean = false;
@@ -176,6 +177,7 @@ export class LocationAddViewComponent implements OnInit {
 
   onSubmit(flag: boolean, id) {
     this.isSubmit = true;
+    this.isCancelDisable = true;
     this.submitted = true;
     this.show_spinner = true;
     if (this.id && flag) {
@@ -203,10 +205,12 @@ export class LocationAddViewComponent implements OnInit {
             }
             this.submitted = false;
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
@@ -228,10 +232,12 @@ export class LocationAddViewComponent implements OnInit {
           }
           this.submitted = false;
         }, (err) => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         });
       } else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     }
@@ -265,7 +271,7 @@ export class LocationAddViewComponent implements OnInit {
             }
 
           } else if (this.is_Add) {
-            if (this.detail.city !== '' && this.detail.city !== undefined) {
+            if (this.detail.city) {
               this.commonService.setuserData(this.detail);
               this.router.navigate([this.currentUrl]);
               this.commonService.setUnSavedData({ value: true, url: this.currentUrl, newurl: this.router.url });

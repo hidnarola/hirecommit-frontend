@@ -28,6 +28,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   cancel_link = '/employer/groups/list';
   groupData: any = [];
   editedData: any;
+  isSubmitted = false;
   show_communication: Boolean = false;
   communicationData: any = [];
   group_id: any;
@@ -63,6 +64,8 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   };
   userDetail: any;
   cursorPos: any;
+  isCancelDisable = false;
+  isCancelCommunicationDisable = false;
   days: any;
   id: any;
   communication = false;
@@ -289,6 +292,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(valid) {
+    this.isCancelDisable = true;
     this.isFormSubmitted = true;
     if (valid) {
       this.show_spinner = true;
@@ -310,10 +314,12 @@ export class GroupAddComponent implements OnInit, OnDestroy {
           this.show_spinner = false;
         }
       }, (err) => {
+        this.isCancelDisable = false;
         this.show_spinner = false;
         this.toastr.error(err['error'].message, 'Error!', { timeOut: 3000 });
       });
     } else {
+      this.isCancelDisable = false;
       this.show_spinner = false;
     }
   }
@@ -346,7 +352,9 @@ export class GroupAddComponent implements OnInit, OnDestroy {
 
   //  on submit of communication
   onCommunicationSubmit(flag) {
+    this.isCancelCommunicationDisable = true;
     this.isNavigate = true;
+    this.isSubmitted = true;
     this.formData = new FormData();
     if (flag) {
       if (this.show_communication) {
@@ -391,7 +399,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
           this.isNavigate = true;
           this.show_spinner = true;
           if (res['data']['status'] === 1) {
-            this.isFormSubmitted = false;
+            this.isSubmitted = false;
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
 
           }
@@ -402,11 +410,15 @@ export class GroupAddComponent implements OnInit, OnDestroy {
           }
 
         }, (err) => {
+          this.isCancelCommunicationDisable = false;
           this.show_spinner = false;
           this.toastr.error(err['error']['message'][0].msg, 'Error!', { timeOut: 3000 });
         });
       }
 
+    } else {
+      this.isCancelCommunicationDisable = false;
+      this.show_spinner = false;
     }
   }
   open(content) {
@@ -431,7 +443,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
     if (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer') {
       this.group = this.addGroup.value;
       if (this.isNavigate === false) {
-        if (this.group.name !== null) {
+        if (this.group.name) {
           const obj = {
             group: this.group,
             group_id: this.group_id,
