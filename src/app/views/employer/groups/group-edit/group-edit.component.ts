@@ -27,6 +27,7 @@ export class GroupEditComponent implements OnInit {
   cancel_link = '/employer/groups/list';
   id: any;
   group: any;
+  isCancelDisable = false;
   isNavigate = false;
   groupData: any = [];
   communicationData: any = [];
@@ -375,6 +376,7 @@ export class GroupEditComponent implements OnInit {
   }
 
   onSubmit(valid) {
+    this.isCancelDisable = true;
     this.isNavigate = true;
     this.isFormSubmitted = true;
     this.show_spinner = true;
@@ -429,10 +431,12 @@ export class GroupEditComponent implements OnInit {
                 this.router.navigate(['/sub_employer/groups/list']);
               }
             }, (err) => {
+              this.isCancelDisable = false;
               this.show_spinner = false;
               this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
             });
           }, reject: () => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
           }
         });

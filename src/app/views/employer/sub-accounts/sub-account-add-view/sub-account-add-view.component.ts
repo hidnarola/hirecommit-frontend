@@ -33,6 +33,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
   userDetail: any;
   is_Add: boolean = false;
   show_spinner = false;
+  isCancelDisable = false;
   employerID: any;
   currentUrl = '';
   cancel_link = '/employer/sub_accounts/list';
@@ -234,7 +235,7 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
 
   onSubmit(flag: boolean) {
     this.isSubmit = true;
-
+    this.isCancelDisable = true;
     this.submitted = true;
     this.show_spinner = true;
     if (this.id && flag && (this.userDetail.role === 'employer' || this.userDetail.role === 'sub-employer')) {
@@ -266,10 +267,12 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
               this.router.navigate(['/admin/employers/approved_employer/' + this.employerID + '/sub_accounts/list']);
             }
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
@@ -306,10 +309,12 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
               this.router.navigate(['/admin/employers/approved_employer/' + this.employerID + '/sub_accounts/list']);
             }
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });
@@ -350,11 +355,13 @@ export class SubAccountAddViewComponent implements OnInit, OnDestroy {
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
           }
         }, (err) => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
           this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
         });
       }
       else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     }

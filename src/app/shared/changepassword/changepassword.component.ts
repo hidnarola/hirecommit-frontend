@@ -24,6 +24,7 @@ export class ChangepasswordComponent implements OnInit, OnDestroy {
   _profile_data: any;
   detail: any;
   isDisabled = false;
+  isCancelDisable = false;
   currentUrl = '';
   isSubmit = false;
   constructor(
@@ -124,6 +125,7 @@ export class ChangepasswordComponent implements OnInit, OnDestroy {
 
   submit(valid) {
     this.isSubmit = true;
+    this.isCancelDisable = true;
     this.isFormSubmitted = true;
     if (valid) {
       this.show_spinner = true;
@@ -155,11 +157,13 @@ export class ChangepasswordComponent implements OnInit, OnDestroy {
               }
             }
           }, (err) => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error'].message, 'Error!', { timeOut: 3000 });
           });
         },
         reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });

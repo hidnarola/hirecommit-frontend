@@ -32,6 +32,7 @@ export class EmployerViewComponent implements OnInit {
   userDetail: any = [];
   email: any[];
   businesstype: any;
+  isCancelDisable = false;
   country: any;
   website: any;
   contactno: any;
@@ -139,6 +140,7 @@ export class EmployerViewComponent implements OnInit {
 
   Update(valid, id) {
     this.submitted = true;
+    this.isCancelDisable = true;
     this.show_spinner = true;
     if (valid) {
 
@@ -157,11 +159,13 @@ export class EmployerViewComponent implements OnInit {
             this.getDetails();
             this.router.navigate([this.cancel_link2]);
           }, err => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
             this.toastr.error(err['error']['message'], 'Error!', { timeOut: 3000 });
           });
 
         }, reject: () => {
+          this.isCancelDisable = false;
           this.show_spinner = false;
         }
       });

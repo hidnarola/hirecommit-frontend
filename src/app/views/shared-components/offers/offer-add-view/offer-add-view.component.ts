@@ -61,6 +61,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
   joiningdate: any;
   isAccepted = false;
   isAccept = false;
+  isCancelDisable = false;
   istouchedArray = [];
   pastDetails: any;
   msg: any;
@@ -2388,6 +2389,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
   // submit offers
   onSubmit(flag) {
     this.isSubmit = true;
+    this.isCancelDisable = true;
     if (this.form.value.salarybracket) {
       this.form.controls['salarybracket_from'].setErrors(null);
       this.form.controls['salarybracket_to'].setErrors(null);
@@ -2540,6 +2542,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 }
               },
               err => {
+                this.isCancelDisable = false;
                 this.show_spinner = false;
                 this.toastr.error(err['error']['message'], 'Error!', {
                   timeOut: 3000
@@ -2548,6 +2551,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
             );
           }, reject: () => {
+            this.isCancelDisable = false;
             this.show_spinner = false;
           }
         });
@@ -2577,6 +2581,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                   }
                 },
                 err => {
+                  this.isCancelDisable = false;
                   this.show_spinner = false;
                   this.toastr.error(err['error']['message'], 'Error!', {
                     timeOut: 3000
@@ -2584,6 +2589,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                 }
               );
             }, reject: () => {
+              this.isCancelDisable = false;
               this.show_spinner = false;
             }
           });
