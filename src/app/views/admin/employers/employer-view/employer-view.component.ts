@@ -171,6 +171,7 @@ export class EmployerViewComponent implements OnInit {
       });
     }
     else {
+      this.isCancelDisable = false;
       this.show_spinner = false;
     }
   }

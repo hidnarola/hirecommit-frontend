@@ -177,6 +177,7 @@ export class CustomFieldAddViewComponent implements OnInit, OnDestroy {
           }
         });
       } else {
+        this.isCancelDisable = false;
         this.show_spinner = false;
       }
     } else {

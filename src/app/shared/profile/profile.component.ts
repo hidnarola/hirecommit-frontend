@@ -335,6 +335,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.show_spinner = false;
         }
       });
+    } else {
+      this.isCancelDisable = false;
+      this.show_spinner = false;
     }
 
   }
@@ -395,8 +398,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.show_spinner = false;
         }
       });
+    } else {
+      this.isCancelDisable = false;
+      this.show_spinner = false;
     }
-    this.show_spinner = false;
 
   }
 

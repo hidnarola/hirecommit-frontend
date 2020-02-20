@@ -443,6 +443,7 @@ export class GroupEditComponent implements OnInit {
       }
     }
     else {
+      this.isCancelDisable = false;
       this.show_spinner = false;
     }
 

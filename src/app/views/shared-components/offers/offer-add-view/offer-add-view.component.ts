@@ -2614,6 +2614,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
 
     }
     this.form_validation = !flag;
+    this.isCancelDisable = false;
   }
 
   ngOnDestroy(): void {

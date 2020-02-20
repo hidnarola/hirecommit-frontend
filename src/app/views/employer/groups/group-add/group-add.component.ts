@@ -28,6 +28,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   cancel_link = '/employer/groups/list';
   groupData: any = [];
   editedData: any;
+  isSubmitted = false;
   show_communication: Boolean = false;
   communicationData: any = [];
   group_id: any;
@@ -318,7 +319,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
         this.toastr.error(err['error'].message, 'Error!', { timeOut: 3000 });
       });
     } else {
-      this.isCancelDisable = true;
+      this.isCancelDisable = false;
       this.show_spinner = false;
     }
   }
@@ -353,6 +354,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
   onCommunicationSubmit(flag) {
     this.isCancelCommunicationDisable = true;
     this.isNavigate = true;
+    this.isSubmitted = true;
     this.formData = new FormData();
     if (flag) {
       if (this.show_communication) {
@@ -397,7 +399,7 @@ export class GroupAddComponent implements OnInit, OnDestroy {
           this.isNavigate = true;
           this.show_spinner = true;
           if (res['data']['status'] === 1) {
-            this.isFormSubmitted = false;
+            this.isSubmitted = false;
             this.toastr.success(res['message'], 'Success!', { timeOut: 3000 });
 
           }
@@ -414,6 +416,9 @@ export class GroupAddComponent implements OnInit, OnDestroy {
         });
       }
 
+    } else {
+      this.isCancelCommunicationDisable = false;
+      this.show_spinner = false;
     }
   }
   open(content) {
