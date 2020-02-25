@@ -573,8 +573,7 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
                   this.form.controls['salarybracket'].setValue(res['offer'].salarybracket);
                   document.getElementById('salarybracket_from').setAttribute('disabled', 'true');
                   document.getElementById('salarybracket_to').setAttribute('disabled', 'true');
-                }
-                else if (res['offer'].salarybracket_from !== '' && res['offer'].salarybracket_to !== '') {
+                } else if (res['offer'].salarybracket_from !== '' && res['offer'].salarybracket_to !== '') {
 
                   this.form.controls['salarybracket_from'].setValue(res['offer'].salarybracket_from);
                   this.form.controls['salarybracket_to'].setValue(res['offer'].salarybracket_to);
@@ -1483,9 +1482,13 @@ export class OfferAddViewComponent implements OnInit, OnDestroy {
           if (this.is_View) {
             this.resData.offertype = (this.offer_type_optoins.find(o => o.value === this.resData.offertype).label);
           }
-          const d = new Date();
-          d.setDate(d.getDate() - 1);
-          if (this.resData.status && d > new Date(this.resData.expirydate)) {
+          // const d = new Date();
+          // d.setDate(d.getDate() - 1);
+
+          const d = moment().startOf('day').format();
+          const exp_date = moment(this.resData.expirydate).startOf('day').format();
+          // new Date(this.resData.expirydate)
+          if (this.resData.status && d > exp_date) {
             this.isExpired = true;
           } else {
             this.isExpired = false;
